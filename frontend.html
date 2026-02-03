@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriAI - Farmer Support System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f9f4;
+            color: #2d3748;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d9061;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #e6f7ed;
+            color: #2d9061;
+        }
+
+        .language-selector {
+            margin-left: 20px;
+        }
+
+        .language-selector select {
+            padding: 8px 16px;
+            border: 2px solid #2d9061;
+            border-radius: 8px;
+            background: white;
+            color: #2d9061;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .language-selector select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 144, 97, 0.1);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, #d4f4dd 0%, #b8e6cc 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            color: #1a5c3a;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: #4a7c59;
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-info h3 {
+            color: #718096;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .stat-info .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-info .subtitle {
+            color: #a0aec0;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-green { background: #d4f4dd; }
+        .icon-blue { background: #dbeafe; }
+        .icon-orange { background: #fed7d7; }
+        .icon-mint { background: #d4f4dd; }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .module-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .module-header h3 {
+            font-size: 18px;
+            color: #2d3748;
+        }
+
+        .module-header p {
+            font-size: 13px;
+            color: #718096;
+            margin-top: 3px;
+        }
+
+        /* Weather Module */
+        .weather-main {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .weather-location {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .weather-temp {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .weather-icon {
+            font-size: 60px;
+        }
+
+        .weather-condition {
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .weather-details {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .weather-detail {
+            text-align: center;
+        }
+
+        .weather-detail-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .weather-detail-label {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .weather-detail-value {
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .forecast {
+            margin-top: 20px;
+        }
+
+        .forecast h4 {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 15px;
+        }
+
+        .forecast-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .forecast-day {
+            flex: 1;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .forecast-temp {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .forecast-condition {
+            flex: 1;
+            text-align: right;
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .forecast-rain {
+            margin-left: 10px;
+            color: #3182ce;
+            font-size: 12px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2d9061 0%, #38a169 100%);
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-primary {
+            background: #2d9061;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #267a50;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 144, 97, 0.3);
+        }
+
+        .btn-secondary {
+            background: #3182ce;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2c5aa0;
+        }
+
+        .btn-purple {
+            background: #805ad5;
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background: #6b46c1;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+        }
+
+        .upload-area:hover {
+            border-color: #2d9061;
+            background: #f7fafc;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #cbd5e0;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        /* Input Fields */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2d9061;
+            box-shadow: 0 0 0 3px rgba(45, 144, 97, 0.1);
+        }
+
+        /* Expert Consultation */
+        .expert-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .expert-label {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .expert-count {
+            background: #2d9061;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 24px;
+            color: #718096;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .chat-message.user .message-bubble {
+            background: #2d9061;
+            color: white;
+        }
+
+        .chat-message.bot .message-bubble {
+            background: white;
+            color: #2d3748;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2d9061;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            🌾 AgriAI
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="showPage('dashboard')">
+                <span>🏠</span> <span class="nav-text">Dashboard</span>
+            </div>
+            <div class="nav-item" onclick="showPage('disease')">
+                <span>👁️</span> <span class="nav-text">Disease Detection</span>
+            </div>
+            <div class="nav-item" onclick="showPage('crop')">
+                <span>🌱</span> <span class="nav-text">Crop Recommendation</span>
+            </div>
+            <div class="nav-item" onclick="showPage('irrigation')">
+                <span>💧</span> <span class="nav-text">Irrigation Advisory</span>
+            </div>
+            <div class="nav-item" onclick="showPage('expert')">
+                <span>🤖</span> <span class="nav-text">AI Consultation</span>
+            </div>
+            <div class="language-selector">
+                <select id="languageSelect" onchange="changeLanguage(this.value)">
+                    <option value="hi">हिंदी</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>AI-Powered Farmer Support System</h1>
+            <p>Complete agricultural intelligence platform for precision farming</p>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Crops Monitored</h3>
+                        <div class="number">15</div>
+                        <div class="subtitle">+3 this week</div>
+                    </div>
+                    <div class="stat-icon icon-green">✓</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Disease Detections</h3>
+                        <div class="number">8</div>
+                        <div class="subtitle">2 new alerts</div>
+                    </div>
+                    <div class="stat-icon icon-blue">👁️</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Active Alerts</h3>
+                        <div class="number">3</div>
+                        <div class="subtitle">Immediate attention</div>
+                    </div>
+                    <div class="stat-icon icon-orange">⚠️</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Yield Improvement</h3>
+                        <div class="number">23%</div>
+                        <div class="subtitle">vs last season</div>
+                    </div>
+                    <div class="stat-icon icon-mint">📈</div>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <div class="modules-grid">
+                <!-- Weather Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon icon-blue">🌤️</div>
+                        <div>
+                            <h3>Weather Conditions</h3>
+                            <p>Maharashtra, India</p>
+                        </div>
+                    </div>
+
+                    <div class="weather-main">
+                        <div class="weather-temp">
+                            28°C
+                            <div class="weather-icon">☀️</div>
+                        </div>
+                        <div class="weather-condition">Partly Cloudy</div>
+                    </div>
+
+                    <div class="weather-details">
+                        <div class="weather-detail">
+                            <div class="weather-detail-icon">💧</div>
+                            <div class="weather-detail-label">Humidity</div>
+                            <div class="weather-detail-value">65%</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="weather-detail-icon">💨</div>
+                            <div class="weather-detail-label">Wind</div>
+                            <div class="weather-detail-value">12 km/h</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="weather-detail-icon">🌧️</div>
+                            <div class="weather-detail-label">Rainfall</div>
+                            <div class="weather-detail-value">2.5mm</div>
+                        </div>
+                    </div>
+
+                    <div class="forecast">
+                        <h4>3-Day Forecast</h4>
+                        <div class="forecast-item">
+                            <div class="forecast-day">Today</div>
+                            <div class="forecast-temp">28°C</div>
+                            <div class="forecast-condition">Partly Cloudy <span class="forecast-rain">10%</span></div>
+                        </div>
+                        <div class="forecast-item">
+                            <div class="forecast-day">Tomorrow</div>
+                            <div class="forecast-temp">30°C</div>
+                            <div class="forecast-condition">Sunny <span class="forecast-rain">5%</span></div>
+                        </div>
+                        <div class="forecast-item">
+                            <div class="forecast-day">Day 3</div>
+                            <div class="forecast-temp">26°C</div>
+                            <div class="forecast-condition">Rainy <span class="forecast-rain">80%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disease Detection Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon icon-green">👁️</div>
+                        <div>
+                            <h3>Disease Detection</h3>
+                            <p>AI-powered plant disease identification with 91% accuracy</p>
+                        </div>
+                    </div>
+
+                    <div class="progress-label">
+                        <span>Detection Accuracy</span>
+                        <span>91%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 91%"></div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="showPage('disease')">Upload Image</button>
+                </div>
+
+                <!-- Crop Recommendation Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon icon-green">🌱</div>
+                        <div>
+                            <h3>Crop Recommendation</h3>
+                            <p>Smart crop selection based on soil and climate data</p>
+                        </div>
+                    </div>
+
+                    <div class="progress-label">
+                        <span>Precision Match</span>
+                        <span>94%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 94%"></div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="showPage('crop')">Get Recommendations</button>
+                </div>
+
+                <!-- Irrigation Advisory Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon icon-blue">💧</div>
+                        <div>
+                            <h3>Irrigation Advisory</h3>
+                            <p>Optimal watering schedules for maximum efficiency</p>
+                        </div>
+                    </div>
+
+                    <div class="progress-label">
+                        <span>Water Savings</span>
+                        <span>30%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%"></div>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="showPage('irrigation')">View Schedule</button>
+                </div>
+
+                <!-- AI Consultation Module -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon icon-purple">🤖</div>
+                        <div>
+                            <h3>AI Consultation</h3>
+                            <p>Real-time support from AI agricultural assistant</p>
+                        </div>
+                    </div>
+
+                    <div class="expert-status">
+                        <span class="expert-label">AI Assistant</span>
+                        <span class="expert-count">Available 24/7</span>
+                    </div>
+
+                    <button class="btn btn-purple" onclick="showPage('expert')">Start Consultation</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disease Detection Page -->
+        <div id="disease-page" class="hidden">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon icon-green">👁️</div>
+                    <div>
+                        <h3>Disease Detection</h3>
+                        <p>Upload plant images for AI-powered disease identification</p>
+                    </div>
+                </div>
+
+                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                    <div class="upload-icon">📷</div>
+                    <div class="upload-text">
+                        <strong>Upload Plant Image</strong><br>
+                        Drag and drop or click to upload
+                    </div>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                </div>
+
+                <div id="imagePreview" class="hidden" style="text-align: center; margin: 20px 0;">
+                    <img id="previewImg" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
+                </div>
+
+                <div id="detectionResult" class="hidden">
+                    <h4 style="margin: 20px 0 10px 0;">Analysis Results</h4>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Disease Detected:</span>
+                            <strong id="diseaseName">-</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Confidence:</span>
+                            <strong id="confidence">-</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Severity:</span>
+                            <strong id="severity">-</strong>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: #fff5f5; border-left: 4px solid #fc8181; border-radius: 4px;">
+                        <strong>Recommended Action:</strong>
+                        <p id="recommendation" style="margin-top: 8px; color: #4a5568;">-</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="analyzeDisease()" id="analyzeBtn" disabled>Analyze Image</button>
+            </div>
+        </div>
+
+        <!-- Crop Recommendation Page -->
+        <div id="crop-page" class="hidden">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon icon-green">🌱</div>
+                    <div>
+                        <h3 class="translate" data-key="cropTitle">Crop Recommendation</h3>
+                        <p class="translate" data-key="cropSubtitle">Get personalized crop suggestions based on your land</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="stateLabel">State / राज्य / రాష్ట్రం</label>
+                    <select class="form-select" id="state" onchange="updateDistricts()">
+                        <option value="">Select / चुनें / ఎంచుకోండి</option>
+                        <option value="maharashtra">Maharashtra / महाराष्ट्र</option>
+                        <option value="telangana">Telangana / తెలంగాణ</option>
+                        <option value="karnataka">Karnataka / कर्नाटक / కర్ణాటక</option>
+                        <option value="andhra">Andhra Pradesh / आंध्र प्रदेश / ఆంధ్ర ప్రదేశ్</option>
+                        <option value="punjab">Punjab / पंजाब</option>
+                        <option value="uttar">Uttar Pradesh / उत्तर प्रदेश</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="districtLabel">District / जिला / జిల్లా</label>
+                    <input type="text" class="form-input" id="district" placeholder="">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="seasonLabel">Current Season / मौसम / కాలం</label>
+                    <select class="form-select" id="season">
+                        <option value="">Select / चुनें / ఎంచుకోండి</option>
+                        <option value="kharif">Kharif (Jun-Oct) / खरीफ / ఖరీఫ్</option>
+                        <option value="rabi">Rabi (Nov-Mar) / रबी / రబీ</option>
+                        <option value="zaid">Zaid (Mar-Jun) / जायद / జాయిద్</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="soilColorLabel">What color is your soil? / मिट्टी का रंग? / మట్టి రంగు?</label>
+                    <select class="form-select" id="soilColor">
+                        <option value="">Select / चुनें / ఎంచుకోండి</option>
+                        <option value="black">Black / काली / నల్ల</option>
+                        <option value="red">Red / लाल / ఎరుపు</option>
+                        <option value="brown">Brown / भूरी / గోధుమ</option>
+                        <option value="yellow">Yellow/Sandy / पीली/रेतीली / పసుపు/ఇసుక</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="soilTypeLabel">How does your soil feel? / मिट्टी कैसी है? / మట్టి ఎలా ఉంది?</label>
+                    <select class="form-select" id="soilTexture">
+                        <option value="">Select / चुनें / ఎంచుకోండి</option>
+                        <option value="sticky">Sticky (like clay) / चिपचिपी (चिकनी) / అంటుకునే (బంకమట్టి)</option>
+                        <option value="smooth">Smooth (silky) / मुलायम (रेशमी) / మృదువైన</option>
+                        <option value="grainy">Grainy (sandy) / रेतीली / ఇసుక</option>
+                        <option value="crumbly">Crumbly (good mix) / भुरभुरी (अच्छी मिश्रित) / కణిక</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="waterLabel">Water availability / पानी की उपलब्धता / నీటి లభ్యత</label>
+                    <select class="form-select" id="waterAvailability">
+                        <option value="">Select / चुनें / ఎంచుకోండి</option>
+                        <option value="abundant">Plenty of water / बहुत पानी है / చాలా నీరు</option>
+                        <option value="moderate">Moderate water / मध्यम पानी / మితమైన నీరు</option>
+                        <option value="limited">Limited water / कम पानी / తక్కువ నీరు</option>
+                        <option value="rainfed">Only rainwater / केवल बारिश का पानी / వర్షపు నీరు మాత్రమే</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="farmSizeLabel">Farm size (in acres) / खेत का आकार (एकड़ में) / పొలం పరిమాణం (ఎకరాలలో)</label>
+                    <input type="number" class="form-input" id="farmSize" placeholder="e.g., 2">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label translate" data-key="lastCropLabel">What did you grow last season? / पिछली बार क्या उगाया? / గత సీజన్‌లో ఏమి పండించారు?</label>
+                    <input type="text" class="form-input" id="lastCrop" placeholder="Rice, Wheat, Cotton etc.">
+                </div>
+
+                <div id="cropResult" class="hidden">
+                    <h4 style="margin: 20px 0 10px 0;" class="translate" data-key="recommendedCrops">Recommended Crops</h4>
+                    <div id="cropList"></div>
+                </div>
+
+                <button class="btn btn-primary" onclick="getCropRecommendation()">
+                    <span class="translate" data-key="getRecommendations">Get Recommendations / सिफारिश पाएं / సిఫార్సులు పొందండి</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Irrigation Advisory Page -->
+        <div id="irrigation-page" class="hidden">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon icon-blue">💧</div>
+                    <div>
+                        <h3>Irrigation Advisory</h3>
+                        <p>Optimize water usage with smart irrigation schedules</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Crop Type</label>
+                    <select class="form-select" id="cropType">
+                        <option value="">Select crop</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="rice">Rice</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="sugarcane">Sugarcane</option>
+                        <option value="maize">Maize</option>
+                        <option value="tomato">Tomato</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Growth Stage</label>
+                    <select class="form-select" id="growthStage">
+                        <option value="">Select stage</option>
+                        <option value="initial">Initial</option>
+                        <option value="development">Development</option>
+                        <option value="mid">Mid Season</option>
+                        <option value="late">Late Season</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Field Size (hectares)</label>
+                    <input type="number" class="form-input" id="fieldSize" placeholder="e.g., 2">
+                </div>
+
+                <div id="irrigationResult" class="hidden">
+                    <h4 style="margin: 20px 0 10px 0;">Irrigation Schedule</h4>
+                    <div style="background: #f7fafc; padding: 20px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Water Required:</span>
+                            <strong id="waterAmount">-</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Frequency:</span>
+                            <strong id="frequency">-</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Next Irrigation:</span>
+                            <strong id="nextIrrigation">-</strong>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: #ebf8ff; border-left: 4px solid #4299e1; border-radius: 4px;">
+                        <strong>💡 Water Saving Tips:</strong>
+                        <ul id="waterTips" style="margin-top: 8px; color: #4a5568; padding-left: 20px;">
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="getIrrigationAdvice()">View Schedule</button>
+            </div>
+        </div>
+
+        <!-- AI Consultation Page -->
+        <div id="expert-page" class="hidden">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon icon-purple">🤖</div>
+                    <div>
+                        <h3>AI Consultation</h3>
+                        <p>Chat with our AI agricultural assistant</p>
+                    </div>
+                </div>
+
+                <div class="chat-container" id="chatContainer">
+                    <div class="chat-message bot">
+                        <div class="message-bubble">
+                            नमस्ते! 🙏 मैं आपकी खेती से जुड़े सवालों में मदद कर सकता हूँ। कृपया अपना सवाल पूछें।
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="अपना सवाल यहाँ लिखें..." onkeypress="handleChatKeyPress(event)">
+                    <button class="btn btn-purple" style="margin: 0; width: auto; padding: 12px 24px;" onclick="sendChatMessage()">भेजें</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                dashboard: 'Dashboard',
+                diseaseDetection: 'Disease Detection',
+                cropRecommendation: 'Crop Recommendation',
+                irrigationAdvisory: 'Irrigation Advisory',
+                aiConsultation: 'AI Consultation',
+                pageTitle: 'AI-Powered Farmer Support System',
+                pageSubtitle: 'Complete agricultural intelligence platform for precision farming',
+                cropsMonitored: 'Crops Monitored',
+                diseaseDetections: 'Disease Detections',
+                activeAlerts: 'Active Alerts',
+                yieldImprovement: 'Yield Improvement',
+                cropTitle: 'Crop Recommendation',
+                cropSubtitle: 'Get personalized crop suggestions based on your land',
+                getRecommendations: 'Get Recommendations',
+                recommendedCrops: 'Recommended Crops'
+            },
+            hi: {
+                dashboard: 'डैशबोर्ड',
+                diseaseDetection: 'रोग पहचान',
+                cropRecommendation: 'फसल सिफारिश',
+                irrigationAdvisory: 'सिंचाई सलाह',
+                aiConsultation: 'AI परामर्श',
+                pageTitle: 'AI-संचालित किसान सहायता प्रणाली',
+                pageSubtitle: 'सटीक खेती के लिए पूर्ण कृषि बुद्धिमत्ता मंच',
+                cropsMonitored: 'निगरानी की गई फसलें',
+                diseaseDetections: 'रोग पहचान',
+                activeAlerts: 'सक्रिय अलर्ट',
+                yieldImprovement: 'उपज में सुधार',
+                cropTitle: 'फसल सिफारिश',
+                cropSubtitle: 'अपनी जमीन के आधार पर व्यक्तिगत फसल सुझाव प्राप्त करें',
+                getRecommendations: 'सिफारिश पाएं',
+                recommendedCrops: 'अनुशंसित फसलें'
+            },
+            te: {
+                dashboard: 'డ్యాష్‌బోర్డ్',
+                diseaseDetection: 'వ్యాధి గుర్తింపు',
+                cropRecommendation: 'పంట సిఫార్సు',
+                irrigationAdvisory: 'నీటిపారుదల సలహా',
+                aiConsultation: 'AI సంప్రదింపు',
+                pageTitle: 'AI-ఆధారిత రైతు మద్దతు వ్యవస్థ',
+                pageSubtitle: 'ఖచ్చితమైన వ్యవసాయం కోసం పూర్తి వ్యవసాయ మేధస్సు వేదిక',
+                cropsMonitored: 'పర్యవేక్షించిన పంటలు',
+                diseaseDetections: 'వ్యాధి గుర్తింపులు',
+                activeAlerts: 'క్రియాశీల హెచ్చరికలు',
+                yieldImprovement: 'దిగుబడి మెరుగుదల',
+                cropTitle: 'పంట సిఫార్సు',
+                cropSubtitle: 'మీ భూమి ఆధారంగా వ్యక్తిగత పంట సూచనలను పొందండి',
+                getRecommendations: 'సిఫార్సులు పొందండి',
+                recommendedCrops: 'సిఫార్సు చేయబడిన పంటలు'
+            }
+        };
+
+        let currentLanguage = 'hi';
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update all elements with translate class
+            document.querySelectorAll('.translate').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            // Update nav text
+            const navTexts = document.querySelectorAll('.nav-text');
+            const navKeys = ['dashboard', 'diseaseDetection', 'cropRecommendation', 'irrigationAdvisory', 'aiConsultation'];
+            navTexts.forEach((text, index) => {
+                if (translations[lang][navKeys[index]]) {
+                    text.textContent = translations[lang][navKeys[index]];
+                }
+            });
+        }
+
+        // Page Navigation
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('[id$="-page"]').forEach(page => {
+                page.classList.add('hidden');
+            });
+
+            // Show selected page
+            document.getElementById(pageName + '-page').classList.remove('hidden');
+
+            // Update nav active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Disease Detection
+        let uploadedImage = null;
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedImage = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                    document.getElementById('analyzeBtn').disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function analyzeDisease() {
+            if (!uploadedImage) return;
+
+            // Show loading
+            const btn = document.getElementById('analyzeBtn');
+            const btnTexts = {
+                en: 'Analyzing...',
+                hi: 'विश्लेषण कर रहे हैं...',
+                te: 'విశ్లేషిస్తోంది...'
+            };
+            btn.textContent = btnTexts[currentLanguage];
+            btn.disabled = true;
+
+            // Simulate AI analysis (replace with actual API call)
+            setTimeout(() => {
+                const diseases = [
+                    { 
+                        name: { en: 'Late Blight', hi: 'लेट ब्लाइट', te: 'లేట్ బ్లైట్' },
+                        confidence: '93%', 
+                        severity: { en: 'High', hi: 'उच्च', te: 'అధిక' },
+                        action: {
+                            en: 'Apply copper-based fungicide immediately. Remove affected leaves. Improve air circulation.',
+                            hi: 'तुरंत कॉपर-आधारित फफूंदनाशक लगाएं। प्रभावित पत्तियों को हटा दें। हवा का संचार बढ़ाएं।',
+                            te: 'వెంటనే రాగి ఆధారిత శిలీంద్ర నాశిని వేయండి. ప్రభావితమైన ఆకులను తొలగించండి. గాలి ప్రసరణను మెరుగుపరచండి.'
+                        }
+                    },
+                    { 
+                        name: { en: 'Leaf Spot', hi: 'पत्ती का धब्बा', te: 'ఆకు మచ్చ' },
+                        confidence: '87%', 
+                        severity: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' },
+                        action: {
+                            en: 'Remove infected leaves. Apply organic neem oil spray. Ensure proper spacing between plants.',
+                            hi: 'संक्रमित पत्तियों को हटा दें। जैविक नीम का तेल स्प्रे करें। पौधों के बीच उचित दूरी सुनिश्चित करें।',
+                            te: 'సోకిన ఆకులను తొలగించండి. సేంద్రీయ వేప నూనె స్ప్రే చేయండి. మొక్కల మధ్య సరైన దూరం ఉండేలా చూడండి.'
+                        }
+                    },
+                    { 
+                        name: { en: 'Powdery Mildew', hi: 'पाउडरी मिल्ड्यू', te: 'పొడి బూజు' },
+                        confidence: '91%', 
+                        severity: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' },
+                        action: {
+                            en: 'Spray with baking soda solution. Improve air circulation. Water in the morning.',
+                            hi: 'बेकिंग सोडा के घोल का छिड़काव करें। हवा का संचार सुधारें। सुबह के समय पानी दें।',
+                            te: 'బేకింగ్ సోడా ద్రావణంతో స్ప్రే చేయండి. గాలి ప్రసరణను మెరుగుపరచండి. ఉదయం సమయంలో నీరు పోయండి.'
+                        }
+                    }
+                ];
+
+                const result = diseases[Math.floor(Math.random() * diseases.length)];
+
+                document.getElementById('diseaseName').textContent = result.name[currentLanguage];
+                document.getElementById('confidence').textContent = result.confidence;
+                document.getElementById('severity').textContent = result.severity[currentLanguage];
+                document.getElementById('recommendation').textContent = result.action[currentLanguage];
+                document.getElementById('detectionResult').classList.remove('hidden');
+
+                const analyzeBtnTexts = {
+                    en: 'Analyze Image',
+                    hi: 'छवि का विश्लेषण करें',
+                    te: 'చిత్రాన్ని విశ్లేషించండి'
+                };
+                btn.textContent = analyzeBtnTexts[currentLanguage];
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        // Crop Recommendation - Updated for farmer-friendly inputs
+        function getCropRecommendation() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const season = document.getElementById('season').value;
+            const soilColor = document.getElementById('soilColor').value;
+            const soilTexture = document.getElementById('soilTexture').value;
+            const waterAvailability = document.getElementById('waterAvailability').value;
+            const farmSize = document.getElementById('farmSize').value;
+            const lastCrop = document.getElementById('lastCrop').value;
+
+            if (!state || !season || !soilColor || !soilTexture || !waterAvailability) {
+                const alerts = {
+                    en: 'Please fill all required fields',
+                    hi: 'कृपया सभी आवश्यक फ़ील्ड भरें',
+                    te: 'దయచేసి అన్ని అవసరమైన ఫీల్డ్‌లను పూరించండి'
+                };
+                alert(alerts[currentLanguage]);
+                return;
+            }
+
+            // Smart crop recommendations based on simple inputs
+            const cropDatabase = {
+                kharif: {
+                    black: {
+                        abundant: [
+                            { name: { en: 'Rice', hi: 'धान', te: 'వరి' }, suitability: '95%', yield: { en: 'High', hi: 'उच्च', te: 'అధిక' }, reason: { en: 'Perfect for black soil with good water', hi: 'पर्याप्त पानी के साथ काली मिट्टी के लिए उपयुक्त', te: 'మంచి నీరుతో నల్ల మట్టికి సరైనది' }},
+                            { name: { en: 'Cotton', hi: 'कपास', te: 'పత్తి' }, suitability: '92%', yield: { en: 'High', hi: 'उच्च', te: 'అధిక' }, reason: { en: 'Black soil is ideal for cotton', hi: 'काली मिट्टी कपास के लिए आदर्श है', te: 'నల్ల మట్టి పత్తికి అనువైనది' }},
+                            { name: { en: 'Soybean', hi: 'सोयाबीन', te: 'సోయాబీన్' }, suitability: '88%', yield: { en: 'Medium-High', hi: 'मध्यम-उच्च', te: 'మధ్యస్థ-అధిక' }, reason: { en: 'Good protein crop for this season', hi: 'इस मौसम के लिए अच्छी प्रोटीन फसल', te: 'ఈ సీజన్‌కు మంచి ప్రోటీన్ పంట' }}
+                        ],
+                        moderate: [
+                            { name: { en: 'Cotton', hi: 'कपास', te: 'పత్తి' }, suitability: '94%', yield: { en: 'High', hi: 'उच्च', te: 'అధిక' }, reason: { en: 'Perfect match for your conditions', hi: 'आपकी परिस्थितियों के लिए बिल्कुल सही', te: 'మీ పరిస్థితులకు సరైన సరిపోలిక' }},
+                            { name: { en: 'Sorghum', hi: 'ज्वार', te: 'జొన్న' }, suitability: '89%', yield: { en: 'Medium-High', hi: 'मध्यम-उच्च', te: 'మధ్యస్థ-అధిక' }, reason: { en: 'Drought tolerant, good for moderate water', hi: 'सूखा सहिष्णु, मध्यम पानी के लिए अच्छा', te: 'కరువు తట్టుకునే, మితమైన నీటికి మంచిది' }},
+                            { name: { en: 'Pigeon Pea', hi: 'अरहर', te: 'కందులు' }, suitability: '85%', yield: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' }, reason: { en: 'Improves soil fertility', hi: 'मिट्टी की उर्वरता में सुधार करता है', te: 'మట్టి సారవంతాన్ని మెరుగుపరుస్తుంది' }}
+                        ],
+                        limited: [
+                            { name: { en: 'Sorghum', hi: 'ज्वार', te: 'జొన్న' }, suitability: '92%', yield: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' }, reason: { en: 'Very drought tolerant', hi: 'बहुत सूखा सहिष्णु', te: 'చాలా కరువు తట్టుకునే' }},
+                            { name: { en: 'Pearl Millet', hi: 'बाजरा', te: 'సజ్జలు' }, suitability: '88%', yield: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' }, reason: { en: 'Needs very little water', hi: 'बहुत कम पानी की आवश्यकता', te: 'చాలా తక్కువ నీరు అవసరం' }},
+                            { name: { en: 'Groundnut', hi: 'मूंगफली', te: 'వేరుశెనగ' }, suitability: '82%', yield: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' }, reason: { en: 'Good cash crop for dry areas', hi: 'सूखे क्षेत्रों के लिए अच्छी नकदी फसल', te: 'పొడి ప్రాంతాలకు మంచి నగదు పంట' }}
+                        ]
+                    },
+                    red: {
+                        moderate: [
+                            { name: { en: 'Groundnut', hi: 'मूंगफली', te: 'వేరుశెనగ' }, suitability: '93%', yield: { en: 'High', hi: 'उच्च', te: 'అధిక' }, reason: { en: 'Red soil is excellent for groundnut', hi: 'लाल मिट्टी मूंगफली के लिए उत्कृष्ट है', te: 'ఎరుపు మట్టి వేరుశెనగకు అద్భుతం' }},
+                            { name: { en: 'Maize', hi: 'मक्का', te: 'మొక్కజొన్న' }, suitability: '89%', yield: { en: 'Medium-High', hi: 'मध्यम-उच्च', te: 'మధ్యస్థ-అధిక' }, reason: { en: 'Good for red soil', hi: 'लाल मिट्टी के लिए अच्छा', te: 'ఎరుపు మట్టికి మంచిది' }},
+                            { name: { en: 'Finger Millet', hi: 'रागी', te: 'రాగి' }, suitability: '85%', yield: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' }, reason: { en: 'Nutritious crop, suits red soil', hi: 'पौष्टिक फसल, लाल मिट्टी के अनुकूल', te: 'పోషక పంట, ఎరుపు మట్టికి సరిపోతుంది' }}
+                        ]
+                    }
+                },
+                rabi: {
+                    black: {
+                        moderate: [
+                            { name: { en: 'Wheat', hi: 'गेहूं', te: 'గోధుమ' }, suitability: '95%', yield: { en: 'High', hi: 'उच्च', te: 'అధిక' }, reason: { en: 'Perfect season and soil for wheat', hi: 'गेहूं के लिए उपयुक्त मौसम और मिट्टी', te: 'గోధుమలకు సరైన సీజన్ మరియు మట్టి' }},
+                            { name: { en: 'Chickpea', hi: 'चना', te: 'శనగలు' }, suitability: '91%', yield: { en: 'High', hi: 'उच्च', te: 'అధిక' }, reason: { en: 'Excellent for black soil in winter', hi: 'सर्दियों में काली मिट्टी के लिए उत्कृष्ट', te: 'శీతాకాలంలో నల్ల మట్టికి అద్భుతం' }},
+                            { name: { en: 'Mustard', hi: 'सरसों', te: 'ఆవాలు' }, suitability: '87%', yield: { en: 'Medium-High', hi: 'मध्यम-उच्च', te: 'మధ్యస్థ-అధిక' }, reason: { en: 'Good oil seed crop', hi: 'अच्छी तिलहन फसल', te: 'మంచి నూనె గింజల పంట' }}
+                        ],
+                        limited: [
+                            { name: { en: 'Chickpea', hi: 'चना', te: 'శనగలు' }, suitability: '93%', yield: { en: 'Medium-High', hi: 'मध्यम-उच्च', te: 'మధ్యస్థ-అధిక' }, reason: { en: 'Drought tolerant pulse', hi: 'सूखा सहिष्णु दलहन', te: 'కరువు తట్టుకునే పప్పు' }},
+                            { name: { en: 'Lentil', hi: 'मसूर', te: 'మసూర్' }, suitability: '88%', yield: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' }, reason: { en: 'Needs less water', hi: 'कम पानी की जरूरत', te: 'తక్కువ నీరు అవసరం' }},
+                            { name: { en: 'Mustard', hi: 'सरसों', te: 'ఆవాలు' }, suitability: '85%', yield: { en: 'Medium', hi: 'मध्यम', te: 'మధ్యస్థ' }, reason: { en: 'Hardy winter crop', hi: 'मजबूत सर्दी की फसल', te: 'దృఢమైన శీతాకాల పంట' }}
+                        ]
+                    }
+                }
+            };
+
+            // Get recommendations based on inputs
+            let crops = [];
+            if (cropDatabase[season] && cropDatabase[season][soilColor]) {
+                crops = cropDatabase[season][soilColor][waterAvailability] || cropDatabase[season][soilColor]['moderate'] || [];
+            }
+
+            // Fallback recommendations
+            if (crops.length === 0) {
+                crops = [
+                    { name: { en: 'Consult Expert', hi: 'विशेषज्ञ से परामर्श लें', te: 'నిపుణుడిని సంప్రదించండి' }, suitability: '-', yield: { en: '-', hi: '-', te: '-' }, reason: { en: 'Please use AI Consultation for personalized advice', hi: 'व्यक्तिगत सलाह के लिए कृपया AI परामर्श का उपयोग करें', te: 'వ్యక్తిగత సలహా కోసం దయచేసి AI సంప్రదింపును ఉపయోగించండి' }}
+                ];
+            }
+
+            let html = '';
+            crops.forEach(crop => {
+                html += `
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #2d9061;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <strong style="font-size: 16px;">${crop.name[currentLanguage]}</strong>
+                            <span style="background: #d4f4dd; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; color: #2d9061;">${crop.suitability}</span>
+                        </div>
+                        <div style="font-size: 13px; color: #718096; margin-bottom: 4px;">${currentLanguage === 'en' ? 'Expected Yield' : currentLanguage === 'hi' ? 'अपेक्षित उपज' : 'ఆశించిన దిగుబడి'}: ${crop.yield[currentLanguage]}</div>
+                        <div style="font-size: 13px; color: #4a5568;">${crop.reason[currentLanguage]}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cropList').innerHTML = html;
+            document.getElementById('cropResult').classList.remove('hidden');
+        }
+
+        function updateDistricts() {
+            // Can add state-specific districts here if needed
+        }
+
+        // Irrigation Advisory
+        function getIrrigationAdvice() {
+            const cropType = document.getElementById('cropType').value;
+            const growthStage = document.getElementById('growthStage').value;
+            const fieldSize = document.getElementById('fieldSize').value;
+
+            if (!cropType || !growthStage || !fieldSize) {
+                const alerts = {
+                    en: 'Please fill all fields',
+                    hi: 'कृपया सभी फ़ील्ड भरें',
+                    te: 'దయచేసి అన్ని ఫీల్డ్‌లను పూరించండి'
+                };
+                alert(alerts[currentLanguage]);
+                return;
+            }
+
+            // Simulate calculation (replace with actual API call)
+            document.getElementById('waterAmount').textContent = (fieldSize * 50) + ' liters/day';
+            const frequencyTexts = {
+                en: 'Every 3 days',
+                hi: 'हर 3 दिन',
+                te: 'ప్రతి 3 రోజులకు'
+            };
+            document.getElementById('frequency').textContent = frequencyTexts[currentLanguage];
+            document.getElementById('nextIrrigation').textContent = 'February 5, 2026';
+
+            const tips = {
+                en: [
+                    'Water early morning or late evening to reduce evaporation',
+                    'Use drip irrigation to save up to 40% water',
+                    'Check soil moisture before irrigating',
+                    'Mulch around plants to retain moisture'
+                ],
+                hi: [
+                    'वाष्पीकरण कम करने के लिए सुबह जल्दी या शाम को पानी दें',
+                    '40% तक पानी बचाने के लिए ड्रिप सिंचाई का उपयोग करें',
+                    'सिंचाई से पहले मिट्टी की नमी की जांच करें',
+                    'नमी बनाए रखने के लिए पौधों के चारों ओर मल्च करें'
+                ],
+                te: [
+                    'ఆవిరైపోవడాన్ని తగ్గించడానికి తెల్లవారుజామున లేదా సాయంకాలం నీరు పోయండి',
+                    '40% వరకు నీటిని ఆదా చేయడానికి డ్రిప్ నీటిపారుదలను ఉపయోగించండి',
+                    'నీటిపారుదల చేయడానికి ముందు నేల తేమను తనిఖీ చేయండి',
+                    'తేమను నిలుపుకోవడానికి మొక్కల చుట్టూ మల్చ్ చేయండి'
+                ]
+            };
+
+            let tipsHtml = '';
+            tips[currentLanguage].forEach(tip => {
+                tipsHtml += `<li style="margin-bottom: 5px;">${tip}</li>`;
+            });
+            document.getElementById('waterTips').innerHTML = tipsHtml;
+
+            document.getElementById('irrigationResult').classList.remove('hidden');
+        }
+
+        // Chat Functionality
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addChatMessage(message, 'user');
+            input.value = '';
+
+            // Simulate bot response (replace with actual ChatGPT API call)
+            setTimeout(() => {
+                const responses = {
+                    en: [
+                        'That\'s a great question. Let me explain in detail...',
+                        'Based on your situation, I recommend...',
+                        'For this season, you should focus on...'
+                    ],
+                    hi: [
+                        'यह एक अच्छा सवाल है। मैं आपको विस्तार से बताता हूँ...',
+                        'आपकी परिस्थिति के आधार पर, मेरी सलाह है...',
+                        'इस मौसम के लिए, आपको ध्यान देना चाहिए...'
+                    ],
+                    te: [
+                        'ఇది మంచి ప్రశ్న. నేను వివరంగా వివరిస్తాను...',
+                        'మీ పరిస్థితి ఆధారంగా, నేను సిఫార్సు చేస్తున్నాను...',
+                        'ఈ సీజన్ కోసం, మీరు దృష్టి పెట్టాలి...'
+                    ]
+                };
+                const langResponses = responses[currentLanguage];
+                const response = langResponses[Math.floor(Math.random() * langResponses.length)];
+                addChatMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function addChatMessage(text, type) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}`;
+            messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Initialize with Hindi
+        window.onload = function() {
+            changeLanguage('hi');
+        };
+    </script>
+</body>
+</html>
