@@ -110,6 +110,8 @@
                 <option value="en">English</option>
             </select>
         </div>
+        <div id="userBadge" style="padding:8px 12px;border-radius:8px;background:#f7fafc;color:#2d3748;font-size:13px;font-weight:600;">Farmer</div>
+        <button id="logoutBtn" onclick="logout()" style="padding:8px 14px;border:none;border-radius:8px;background:#2d9061;color:white;font-weight:600;cursor:pointer;">Logout</button>
     </div>
 </nav>
 
@@ -129,14 +131,6 @@
             <div class="stat-card">
                 <div class="stat-info"><h3 data-i18n="card_backend_status">Backend Status</h3><div class="number" id="statStatus" style="font-size:18px;margin-top:6px;">Checking…</div><div class="subtitle" id="statUrl"></div></div>
                 <div class="stat-icon icon-blue">🔗</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info"><h3 data-i18n="card_alerts">Alerts</h3><div class="number" id="statAlerts">—</div><div class="subtitle" data-i18n="card_alerts_subtitle">not connected to real alert data yet</div></div>
-                <div class="stat-icon icon-orange">⚠️</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info"><h3 data-i18n="card_yield">Yield Improvement</h3><div class="number" id="statYield">—</div><div class="subtitle" data-i18n="card_yield_subtitle">demo metric not implemented yet</div></div>
-                <div class="stat-icon icon-mint">📈</div>
             </div>
         </div>
 
@@ -954,6 +948,59 @@ window.onload = () => {
     applyTranslations();
     checkBackend();
     loadCropCount();
+};
+</script>
+<script>
+const authToken = localStorage.getItem("token");
+const farmerName = localStorage.getItem("farmerName");
+const farmerPhone = localStorage.getItem("farmerPhone");
+
+async function verifyAuth() {
+    if (!authToken) {
+        window.location.href = "/login";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/api/verify`, {
+            headers: { Authorization: `Bearer ${authToken}` }
+        });
+        const data = await response.json();
+        if (!response.ok || !data.valid) throw new Error("Invalid session");
+
+        const displayName = data.farmer?.name || farmerName || "Farmer";
+        document.getElementById("userBadge").textContent = `Farmer: ${displayName}`;
+    } catch (error) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("farmerName");
+        localStorage.removeItem("farmerPhone");
+        localStorage.removeItem("farmerVillage");
+        window.location.href = "/login";
+    }
+}
+
+async function logout() {
+    try {
+        if (authToken) {
+            await fetch(`${API_BASE}/api/logout`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${authToken}` }
+            });
+        }
+    } catch (error) {
+    } finally {
+        localStorage.removeItem("token");
+        localStorage.removeItem("farmerName");
+        localStorage.removeItem("farmerPhone");
+        localStorage.removeItem("farmerVillage");
+        window.location.href = "/login";
+    }
+}
+
+const previousOnload = window.onload;
+window.onload = async () => {
+    if (typeof previousOnload === "function") previousOnload();
+    await verifyAuth();
 };
 </script>
 </body>

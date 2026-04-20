@@ -1,12 +1,19 @@
 import base64
 import os
+import secrets
+import sqlite3
+from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
+from werkzeug.security import check_password_hash, generate_password_hash
 
 load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = Path(os.getenv("DATABASE_PATH", BASE_DIR / "smartcrop.db"))
 
 app = Flask(__name__)
 CORS(app)
@@ -28,6 +35,41 @@ OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "openrouter/free").strip()
 HF_API_KEY = os.getenv("HF_API_KEY", os.getenv("HF_TOKEN", "")).strip()
 HF_CHAT_MODEL = os.getenv("HF_CHAT_MODEL", "google/gemma-2-2b-it").strip()
 PLANTNET_API_KEY = os.getenv("PLANTNET_API_KEY", "").strip()
+
+
+def get_db_connection():
+    connection = sqlite3.connect(DB_PATH)
+    connection.row_factory = sqlite3.Row
+    return connection
+
+
+def init_db():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            phone TEXT NOT NULL UNIQUE,
+            village TEXT NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS sessions (
+            token TEXT PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+        """
+    )
+    connection.commit()
+    connection.close()
 
 
 def json_error(message, status_code=400):
@@ -55,6 +97,76 @@ def normalize_image_metadata(mime_type):
         "image/png": ("crop.png", "image/png"),
     }
     return allowed_types.get((mime_type or "").lower(), ("crop.jpeg", "image/jpeg"))
+
+
+def resolve_language_name(language_code):
+    languages = {"en": "English", "hi": "Hindi", "te": "Telugu"}
+    return languages.get((language_code or "en").lower(), "English")
+
+
+def find_user_by_phone(phone):
+    connection = get_db_connection()
+    row = connection.execute(
+        "SELECT id, name, phone, village, password_hash FROM users WHERE phone = ?",
+        (phone,),
+    ).fetchone()
+    connection.close()
+    return dict(row) if row else None
+
+
+def create_user(name, phone, village, password):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute(
+        """
+        INSERT INTO users (name, phone, village, password_hash)
+        VALUES (?, ?, ?, ?)
+        """,
+        (name, phone, village, generate_password_hash(password)),
+    )
+    connection.commit()
+    connection.close()
+
+
+def create_session(user_id):
+    token = secrets.token_hex(24)
+    connection = get_db_connection()
+    connection.execute(
+        "INSERT INTO sessions (token, user_id) VALUES (?, ?)",
+        (token, user_id),
+    )
+    connection.commit()
+    connection.close()
+    return token
+
+
+def get_user_by_token(token):
+    connection = get_db_connection()
+    row = connection.execute(
+        """
+        SELECT users.id, users.name, users.phone, users.village
+        FROM sessions
+        JOIN users ON users.id = sessions.user_id
+        WHERE sessions.token = ?
+        """,
+        (token,),
+    ).fetchone()
+    connection.close()
+    return dict(row) if row else None
+
+
+def delete_session(token):
+    connection = get_db_connection()
+    connection.execute("DELETE FROM sessions WHERE token = ?", (token,))
+    connection.commit()
+    connection.close()
+
+
+def get_bearer_token():
+    auth_header = request.headers.get("Authorization", "").strip()
+    if auth_header.startswith("Bearer "):
+        return auth_header.split(" ", 1)[1].strip()
+    return ""
 
 
 def build_recommendations(temperature, humidity, soil_ph):
@@ -95,9 +207,13 @@ def generate_local_advice(payload):
 
     if temperature is not None:
         if temperature > 35:
-            notes.append("Temperature is high, so irrigate in the early morning and reduce heat stress.")
+            notes.append(
+                "Temperature is high, so irrigate in the early morning and reduce heat stress."
+            )
         elif temperature < 15:
-            notes.append("Temperature is on the lower side, so avoid overwatering and watch for slow growth.")
+            notes.append(
+                "Temperature is on the lower side, so avoid overwatering and watch for slow growth."
+            )
 
     if humidity is not None and humidity < 40:
         notes.append("Humidity is low, so mulching can help retain soil moisture.")
@@ -106,19 +222,14 @@ def generate_local_advice(payload):
         if soil_ph < 5.5:
             notes.append("Soil is acidic, so lime can help correct pH over time.")
         elif soil_ph > 7.5:
-            notes.append("Soil is alkaline, so compost and organic matter can improve nutrient uptake.")
+            notes.append(
+                "Soil is alkaline, so compost and organic matter can improve nutrient uptake."
+            )
 
-    notes.append("Inspect the field twice a week for pests, leaf discoloration, and water stress.")
+    notes.append(
+        "Inspect the field twice a week for pests, leaf discoloration, and water stress."
+    )
     return " ".join(notes)
-
-
-def resolve_language_name(language_code):
-    languages = {
-        "en": "English",
-        "hi": "Hindi",
-        "te": "Telugu",
-    }
-    return languages.get((language_code or "en").lower(), "English")
 
 
 def call_openrouter(messages):
@@ -165,11 +276,101 @@ def call_huggingface_chat(messages):
 
 @app.route("/")
 def index():
+    return send_file("login.html")
+
+
+@app.route("/login")
+def login_page():
+    return send_file("login.html")
+
+
+@app.route("/register")
+def register_page():
+    return send_file("register.html")
+
+
+@app.route("/home")
+def home_page():
     return send_file("frontend.html")
 
 
+@app.route("/api/register", methods=["POST"])
+def register():
+    data = get_json_body()
+    if not data:
+        return json_error("Expected a JSON request body")
+
+    name = str(data.get("name", "")).strip()
+    phone = str(data.get("phone", "")).strip()
+    village = str(data.get("village", "")).strip()
+    password = str(data.get("password", ""))
+
+    if not all([name, phone, village, password]):
+        return json_error("All fields are required")
+
+    if len(password) < 6:
+        return json_error("Password must be at least 6 characters")
+
+    if find_user_by_phone(phone):
+        return json_error("Phone number already registered", 409)
+
+    create_user(name, phone, village, password)
+    return jsonify({"success": True, "message": "Account created successfully"})
+
+
+@app.route("/api/login", methods=["POST"])
+def login():
+    data = get_json_body()
+    if not data:
+        return json_error("Expected a JSON request body")
+
+    phone = str(data.get("phone", "")).strip()
+    password = str(data.get("password", ""))
+
+    if not phone or not password:
+        return json_error("Phone and password are required")
+
+    user = find_user_by_phone(phone)
+    if not user or not check_password_hash(user["password_hash"], password):
+        return json_error("Invalid phone or password", 401)
+
+    token = create_session(user["id"])
+    return jsonify(
+        {
+            "success": True,
+            "token": token,
+            "farmer": {
+                "name": user["name"],
+                "phone": user["phone"],
+                "village": user["village"],
+            },
+        }
+    )
+
+
+@app.route("/api/logout", methods=["POST"])
+def logout():
+    token = get_bearer_token()
+    if token:
+        delete_session(token)
+    return jsonify({"success": True})
+
+
+@app.route("/api/verify")
+def verify():
+    token = get_bearer_token()
+    if not token:
+        return jsonify({"valid": False}), 401
+
+    user = get_user_by_token(token)
+    if not user:
+        return jsonify({"valid": False}), 401
+
+    return jsonify({"valid": True, "farmer": user})
+
+
 @app.route("/api/health")
-def home():
+def health():
     return jsonify(
         {
             "status": "ok",
@@ -408,13 +609,11 @@ def disease():
         common_name = common_name[0] if common_name else None
         label = top_result.get("label") or top_result.get("name") or "Unknown issue"
         disease_name = f"{label} ({common_name})" if common_name else label
-
         suggestions = [
             "Inspect nearby plants for similar symptoms.",
             "Remove heavily affected leaves if the infection is spreading.",
             "Avoid overhead watering until the issue is confirmed.",
         ]
-
         return jsonify(
             {
                 "disease": disease_name,
@@ -433,6 +632,8 @@ def disease():
 
     return json_error("Disease API returned no matches for this image", 502)
 
+
+init_db()
 
 if __name__ == "__main__":
     app.run(debug=True)
