@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriAI - Farmer Support System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-cream: #fef9e7;
+      --bg-blush: #f8edeb;
+      --bg-leaf: #e8f5e8;
+      --accent-orange: #f4a261;
+      --accent-coral: #e76f51;
+      --accent-forest: #2a4d3e;
+      --text-main: #2a2a2a;
+      --text-soft: #6b7280;
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --line-soft: rgba(244, 162, 97, 0.2);
+    }
+
+    body {
+      font-family: "Inter", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-blush) 50%, var(--bg-leaf) 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(244, 162, 97, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(231, 111, 81, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 1rem 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(244, 162, 97, 0.3);
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-coral), var(--accent-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: "Playfair Display", serif;
+      white-space: nowrap;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-menu { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+
+    .nav-item {
+      padding: 0.75rem 1.1rem;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .nav-item::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 -100%;
+      width: 100%;
+      background: linear-gradient(90deg, transparent, rgba(244, 162, 97, 0.18), transparent);
+      transition: left 0.5s;
+    }
+
+    .nav-item:hover::before { left: 100%; }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-coral));
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(231, 111, 81, 0.3);
+    }
+
+    .language-selector select,
+    .logout-btn {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--accent-orange);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--accent-forest);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, var(--accent-coral), var(--accent-orange));
+      color: #fff;
+      border: none;
+    }
+
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+    .page-header {
+      background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-coral) 50%, #f8edeb 100%);
+      padding: 3rem;
+      border-radius: 24px;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px rgba(231, 111, 81, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .page-header h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--accent-forest);
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+      font-family: "Playfair Display", serif;
+    }
+
+    .page-header p { color: #5a4a3a; font-size: 1.08rem; max-width: 780px; }
+
+    .stats-grid,
+    .modules-grid {
+      display: grid;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stats-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .modules-grid { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+
+    .stat-card,
+    .module-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      border: 1px solid var(--line-soft);
+    }
+
+    .stat-card {
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(231, 111, 81, 0.15);
+    }
+
+    .stat-info h3 { color: var(--text-soft); font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .stat-info .number { font-size: 2.35rem; font-weight: 800; color: var(--accent-coral); line-height: 1; }
+    .stat-info .subtitle { color: #9ca3af; font-size: 0.875rem; margin-top: 0.35rem; }
+
+    .stat-icon,
+    .module-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      font-size: 1.5rem;
+    }
+
+    .module-card {
+      padding: 2rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .module-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+
+    .module-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 16px;
+      font-size: 1.5rem;
+    }
+
+    .module-header h3 { font-size: 1.5rem; color: var(--accent-forest); }
+    .module-header p { font-size: 0.95rem; color: var(--text-soft); }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-coral) 0%, var(--accent-orange) 100%);
+      border-radius: 12px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+    }
+
+    .btn {
+      padding: 1rem 1.25rem;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      margin-top: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    .btn:hover::before { left: 100%; }
+    .btn:hover { transform: translateY(-3px); }
+
+    .btn-primary { background: linear-gradient(135deg, var(--accent-coral), var(--accent-orange)); color: #fff; }
+    .btn-secondary { background: linear-gradient(135deg, #a8e6cf, #88d8a3); color: var(--accent-forest); }
+    .btn-accent { background: linear-gradient(135deg, #ffd23f, #ffab00); color: var(--accent-forest); }
+
+    .btn-primary:hover { box-shadow: 0 15px 35px rgba(231, 111, 81, 0.35); }
+    .btn-secondary:hover { box-shadow: 0 15px 35px rgba(168, 230, 207, 0.4); }
+    .btn-accent:hover { box-shadow: 0 15px 35px rgba(255, 171, 0, 0.32); }
+
+    .upload-area {
+      border: 3px dashed var(--accent-orange);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.35s;
+      margin: 1.5rem 0;
+      background: rgba(244, 162, 97, 0.05);
+    }
+
+    .upload-area:hover {
+      border-color: var(--accent-coral);
+      background: rgba(231, 111, 81, 0.08);
+      transform: scale(1.01);
+    }
+
+    .upload-icon { font-size: 4rem; color: var(--accent-orange); margin-bottom: 1rem; }
+    .upload-text { color: var(--text-soft); font-size: 1.08rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-label {
+      display: block;
+      font-size: 0.92rem;
+      color: #4b5563;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .form-input,
+    .form-select,
+    .chat-input,
+    .city-input-row input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.88);
+      font-family: inherit;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .chat-input:focus,
+    .city-input-row input:focus {
+      outline: none;
+      border-color: var(--accent-coral);
+      box-shadow: 0 0 0 4px rgba(231, 111, 81, 0.15);
+    }
+
+    .chat-container {
+      height: 400px;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .chat-message { margin-bottom: 1rem; display: flex; }
+    .chat-message.user { justify-content: flex-end; }
+
+    .message-bubble {
+      max-width: 70%;
+      padding: 1rem 1.25rem;
+      border-radius: 24px;
+      word-wrap: break-word;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .chat-message.user .message-bubble {
+      background: linear-gradient(135deg, var(--accent-coral), var(--accent-orange));
+      color: #fff;
+    }
+
+    .chat-message.bot .message-bubble { background: #fff; color: var(--text-main); }
+
+    .chat-input-container { display: flex; gap: 1rem; }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--accent-coral);
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden { display: none; }
+
+    .alert-box {
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
+      margin: 1rem 0;
+      font-size: 1rem;
+      border-left: 5px solid;
+    }
+
+    .alert-success { background: rgba(212, 244, 221, 0.8); color: var(--accent-forest); border-left-color: #2d9061; }
+    .alert-error { background: rgba(255, 245, 245, 0.92); color: #c53030; border-left-color: #f56565; }
+    .alert-info { background: rgba(235, 248, 255, 0.82); color: #2b6cb0; border-left-color: #63b3ed; }
+    .alert-warning { background: rgba(255, 251, 235, 0.92); color: #92400e; border-left-color: var(--accent-orange); }
+
+    .city-input-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .city-input-row button {
+      padding: 0.875rem 1.5rem;
+      background: linear-gradient(135deg, var(--accent-coral), var(--accent-orange));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .expert-status {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 1rem;
+      border-radius: 14px;
+      background: rgba(168, 230, 207, 0.28);
+      color: var(--accent-forest);
+      font-weight: 600;
+    }
+
+    .user-badge {
+      padding: 0.75rem 1rem;
+      background: rgba(42, 77, 62, 0.08);
+      border-radius: 12px;
+      color: var(--accent-forest);
+      font-weight: 600;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 992px) {
+      .navbar { flex-direction: column; align-items: stretch; }
+      .nav-right { justify-content: flex-start; }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .page-header { padding: 2rem 1.5rem; }
+      .nav-menu { flex-direction: column; width: 100%; }
+      .nav-item { width: 100%; justify-content: center; }
+      .modules-grid, .stats-grid, .two-column { grid-template-columns: 1fr; }
+      .city-input-row, .chat-input-container { flex-direction: column; }
+      .message-bubble { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">🌾 AgriAI</div>
+    <div class="nav-right">
+      <div class="nav-menu">
+        <div class="nav-item active" onclick="showPage('dashboard', this)">
+          <span>🏠</span> <span class="nav-text" data-i18n="nav_dashboard">Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="showPage('disease', this)">
+          <span>👁️</span> <span class="nav-text" data-i18n="nav_disease">Disease Detection</span>
+        </div>
+        <div class="nav-item" onclick="showPage('crop', this)">
+          <span>🌱</span> <span class="nav-text" data-i18n="nav_crop">Crop Recommendation</span>
+        </div>
+        <div class="nav-item" onclick="showPage('irrigation', this)">
+          <span>💧</span> <span class="nav-text" data-i18n="nav_irrigation">Irrigation Advisory</span>
+        </div>
+        <div class="nav-item" onclick="showPage('expert', this)">
+          <span>🤖</span> <span class="nav-text" data-i18n="nav_ai">AI Consultation</span>
+        </div>
+      </div>
+      <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage(this.value)">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="te">తెలుగు</option>
+        </select>
+      </div>
+      <div class="user-badge" id="userBadge">Farmer</div>
+      <button class="logout-btn" type="button" onclick="logout()" data-i18n="logout_button">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 data-i18n="header_title">🌿 AI-Powered Farmer Support System</h1>
+      <p data-i18n="header_subtitle">Smart weather, crop planning, irrigation guidance, disease assistance, and AI support in one farmer-friendly dashboard.</p>
+    </div>
+
+    <div id="dashboard-page">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3 data-i18n="card_supported_crops">Supported Crops</h3>
+            <div class="number" id="statCrops">-</div>
+            <div class="subtitle" data-i18n="card_supported_crops_subtitle">available in the recommendation engine</div>
+          </div>
+          <div class="stat-icon" style="background:linear-gradient(135deg,#f4a261,#e76f51);color:#fff;">🌾</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3 data-i18n="card_backend_status">Backend Status</h3>
+            <div class="number" id="statStatus" style="font-size:1.2rem;margin-top:6px;">Checking...</div>
+            <div class="subtitle" id="statUrl"></div>
+          </div>
+          <div class="stat-icon" style="background:linear-gradient(135deg,#a8e6cf,#88d8a3);color:#2a4d3e;">🔗</div>
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#a8e6cf,#88d8a3);color:#2a4d3e;">🌤️</div>
+            <div>
+              <h3 data-i18n="weather_title">Live Weather</h3>
+              <p data-i18n="weather_subtitle">Current city weather from your Flask weather API</p>
+            </div>
+          </div>
+          <div class="city-input-row">
+            <input type="text" id="dashCity" placeholder="Enter city, e.g. Hyderabad" data-placeholder="weather_city_placeholder" onkeypress="if(event.key==='Enter') fetchWeatherDash()">
+            <button type="button" onclick="fetchWeatherDash()" data-i18n="weather_button">Get Weather</button>
+          </div>
+          <div id="dashWeatherResult"></div>
+        </div>
+
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#f4a261,#e76f51);color:#fff;">👁️</div>
+            <div>
+              <h3 data-i18n="disease_shortcut_title">Disease Detection</h3>
+              <p data-i18n="disease_shortcut_subtitle">Upload a plant image for AI-assisted issue detection</p>
+            </div>
+          </div>
+          <div class="progress-label"><span data-i18n="disease_accuracy">Detection Accuracy</span><span>91%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:91%"></div></div>
+          <button class="btn btn-primary" type="button" onclick="showPage('disease')" data-i18n="upload_image">Upload Image</button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#f4a261,#e76f51);color:#fff;">🌱</div>
+            <div>
+              <h3 data-i18n="crop_shortcut_title">Crop Recommendation</h3>
+              <p data-i18n="crop_shortcut_subtitle">Get matches based on field temperature, humidity, and soil pH</p>
+            </div>
+          </div>
+          <div class="progress-label"><span data-i18n="precision_match">Precision Match</span><span>94%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
+          <button class="btn btn-primary" type="button" onclick="showPage('crop')" data-i18n="get_recommendations">Get Recommendations</button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#a8e6cf,#88d8a3);color:#2a4d3e;">💧</div>
+            <div>
+              <h3 data-i18n="irrigation_shortcut_title">Irrigation Advisory</h3>
+              <p data-i18n="irrigation_shortcut_subtitle">Estimate a watering schedule and daily water use</p>
+            </div>
+          </div>
+          <div class="progress-label"><span data-i18n="water_savings">Water Savings</span><span>30%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
+          <button class="btn btn-secondary" type="button" onclick="showPage('irrigation')" data-i18n="view_schedule">View Schedule</button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#ffd23f,#ffab00);color:#2a4d3e;">🤖</div>
+            <div>
+              <h3 data-i18n="ai_shortcut_title">AI Consultation</h3>
+              <p data-i18n="ai_shortcut_subtitle">Ask an agriculture question with your crop and field details</p>
+            </div>
+          </div>
+          <div class="expert-status">
+            <span class="expert-label" data-i18n="assistant_status">Assistant Status</span>
+            <span class="expert-count" data-i18n="available_247">Available 24/7</span>
+          </div>
+          <button class="btn btn-accent" type="button" onclick="showPage('expert')" data-i18n="start_consultation">Start Consultation</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="disease-page" class="hidden">
+      <div class="module-card">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#f4a261,#e76f51);color:#fff;">👁️</div>
+          <div>
+            <h3 data-i18n="disease_page_title">Disease Detection</h3>
+            <p data-i18n="disease_page_subtitle">Upload plant images for AI-assisted disease identification</p>
+          </div>
+        </div>
+
+        <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">
+            <strong data-i18n="upload_plant_image">Upload Plant Image</strong><br>
+            <span data-i18n="drag_drop">Drag and drop or click to upload</span>
+          </div>
+          <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+        </div>
+
+        <div id="imagePreview" class="hidden" style="text-align:center;margin:20px 0;">
+          <img id="previewImg" alt="Plant preview" data-alt="plant_preview_alt" style="max-width:100%;max-height:300px;border-radius:12px;">
+        </div>
+
+        <div id="detectionResult" class="hidden">
+          <h4 style="margin:20px 0 10px 0;" data-i18n="analysis_results">Analysis Results</h4>
+          <div style="background:#f7fafc;padding:20px;border-radius:12px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+              <span data-i18n="disease_detected">Disease Detected:</span><strong id="diseaseName">-</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+              <span data-i18n="confidence">Confidence:</span><strong id="confidence">-</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span data-i18n="severity">Severity:</span><strong id="severity">-</strong>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding:15px;background:#fff5f5;border-left:4px solid #fc8181;border-radius:10px;">
+            <strong data-i18n="recommended_action">Recommended Action:</strong>
+            <p id="recommendation" style="margin-top:8px;color:#4a5568;"></p>
+          </div>
+        </div>
+
+        <div id="diseaseSpinner" class="hidden">
+          <div class="spinner"></div>
+          <p style="text-align:center;color:#718096;font-size:13px;margin-top:8px;" data-i18n="analyzing_image">AI is analyzing your image...</p>
+        </div>
+        <div id="diseaseError"></div>
+        <button class="btn btn-primary" type="button" onclick="analyzeDisease()" id="analyzeBtn" disabled data-i18n="analyze_image">Analyze Image</button>
+      </div>
+    </div>
+
+    <div id="crop-page" class="hidden">
+      <div class="module-card">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#f4a261,#e76f51);color:#fff;">🌱</div>
+          <div>
+            <h3 data-i18n="crop_page_title">Crop Recommendation</h3>
+            <p data-i18n="crop_page_subtitle">Match crops to your field conditions</p>
+          </div>
+        </div>
+
+        <div class="alert-box alert-info" data-i18n="crop_info_box">
+          This form sends data to <strong>POST /api/recommend</strong> on your Flask backend.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="temperature_label">Temperature (°C)</label>
+          <input type="number" class="form-input" id="cropTemp" placeholder="e.g. 28" data-placeholder="example_28">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="humidity_label">Humidity (%)</label>
+          <input type="number" class="form-input" id="cropHumidity" placeholder="e.g. 65" data-placeholder="example_65">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="soil_ph_label">Soil pH</label>
+          <input type="number" step="0.1" class="form-input" id="cropPh" placeholder="e.g. 6.5" data-placeholder="example_65ph">
+        </div>
+
+        <div id="cropSpinner" class="hidden"><div class="spinner"></div></div>
+        <div id="cropApiResult" class="hidden">
+          <h4 style="margin:20px 0 10px 0;" data-i18n="recommended_crops_heading">Recommended Crops</h4>
+          <div id="cropList"></div>
+        </div>
+        <div id="cropError" class="hidden"></div>
+
+        <button class="btn btn-primary" type="button" onclick="getCropRecommendation()" data-i18n="get_recommendations">Get Recommendations</button>
+
+        <hr style="margin:30px 0;border:none;border-top:1px solid #e2e8f0;">
+
+        <h4 style="margin-bottom:15px;" data-i18n="check_advisory_heading">Check Advisory for Specific Crop</h4>
+        <div class="form-group">
+          <label class="form-label" data-i18n="crop_name_label">Crop Name</label>
+          <select class="form-select" id="advisoryCrop">
+            <option value="" data-i18n="select_crop">Select crop</option>
+            <option value="wheat" data-i18n="crop_wheat">Wheat</option>
+            <option value="rice" data-i18n="crop_rice">Rice</option>
+            <option value="maize" data-i18n="crop_maize">Maize</option>
+            <option value="potato" data-i18n="crop_potato">Potato</option>
+            <option value="tomato" data-i18n="crop_tomato">Tomato</option>
+            <option value="cotton" data-i18n="crop_cotton">Cotton</option>
+            <option value="soybean" data-i18n="crop_soybean">Soybean</option>
+            <option value="sugarcane" data-i18n="crop_sugarcane">Sugarcane</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="temperature_label">Temperature (°C)</label>
+          <input type="number" class="form-input" id="advTemp" placeholder="e.g. 20" data-placeholder="example_20">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="humidity_label">Humidity (%)</label>
+          <input type="number" class="form-input" id="advHumidity" placeholder="e.g. 55" data-placeholder="example_55">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="soil_ph_label">Soil pH</label>
+          <input type="number" step="0.1" class="form-input" id="advPh" placeholder="e.g. 6.5" data-placeholder="example_65ph">
+        </div>
+        <div id="advisorySpinner" class="hidden"><div class="spinner"></div></div>
+        <div id="advisoryResult" class="hidden"></div>
+        <button class="btn btn-secondary" type="button" onclick="checkAdvisory()" data-i18n="check_advisory">Check Advisory</button>
+      </div>
+    </div>
+
+    <div id="irrigation-page" class="hidden">
+      <div class="module-card">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#a8e6cf,#88d8a3);color:#2a4d3e;">💧</div>
+          <div>
+            <h3 data-i18n="irrigation_page_title">Irrigation Advisory</h3>
+            <p data-i18n="irrigation_page_subtitle">Optimize water usage with a simple schedule</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="crop_type_label">Crop Type</label>
+          <select class="form-select" id="cropType">
+            <option value="" data-i18n="select_crop">Select crop</option>
+            <option value="wheat" data-i18n="crop_wheat">Wheat</option>
+            <option value="rice" data-i18n="crop_rice">Rice</option>
+            <option value="cotton" data-i18n="crop_cotton">Cotton</option>
+            <option value="sugarcane" data-i18n="crop_sugarcane">Sugarcane</option>
+            <option value="maize" data-i18n="crop_maize">Maize</option>
+            <option value="tomato" data-i18n="crop_tomato">Tomato</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="growth_stage_label">Growth Stage</label>
+          <select class="form-select" id="growthStage">
+            <option value="" data-i18n="select_stage">Select stage</option>
+            <option value="initial" data-i18n="stage_initial">Initial</option>
+            <option value="development" data-i18n="stage_development">Development</option>
+            <option value="mid" data-i18n="stage_mid">Mid Season</option>
+            <option value="late" data-i18n="stage_late">Late Season</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="field_size_label">Field Size (hectares)</label>
+          <input type="number" class="form-input" id="fieldSize" placeholder="e.g. 2" data-placeholder="example_2">
+        </div>
+
+        <div id="irrigationResult" class="hidden">
+          <h4 style="margin:20px 0 10px 0;" data-i18n="irrigation_schedule">Irrigation Schedule</h4>
+          <div style="background:#f7fafc;padding:20px;border-radius:12px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span data-i18n="water_required">Water Required:</span><strong id="waterAmount">-</strong></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span data-i18n="frequency_label">Frequency:</span><strong id="frequency">-</strong></div>
+            <div style="display:flex;justify-content:space-between;"><span data-i18n="next_irrigation">Next Irrigation:</span><strong id="nextIrrigation">-</strong></div>
+          </div>
+          <div style="margin-top:20px;padding:15px;background:#ebf8ff;border-left:4px solid #4299e1;border-radius:10px;">
+            <strong data-i18n="water_tips">Water Saving Tips:</strong>
+            <ul id="waterTips" style="margin-top:8px;color:#4a5568;padding-left:20px;"></ul>
+          </div>
+        </div>
+        <button class="btn btn-secondary" type="button" onclick="getIrrigationAdvice()" data-i18n="view_schedule">View Schedule</button>
+      </div>
+    </div>
+
+    <div id="expert-page" class="hidden">
+      <div class="module-card">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#ffd23f,#ffab00);color:#2a4d3e;">🤖</div>
+          <div>
+            <h3 data-i18n="ai_page_title">AI Consultation</h3>
+            <p data-i18n="ai_page_subtitle">Ask a farming question with crop and field details</p>
+          </div>
+        </div>
+
+        <div class="alert-box alert-info" style="margin-bottom:15px;" data-i18n="ai_info_box">
+          Fill in the details below, then ask a question. The AI uses your crop and location data.
+        </div>
+
+        <div class="two-column">
+          <div class="form-group" style="margin:0">
+            <label class="form-label" data-i18n="crop_label">Crop</label>
+            <select class="form-select" id="aiCrop">
+              <option value="rice" data-i18n="crop_rice">Rice</option>
+              <option value="wheat" data-i18n="crop_wheat">Wheat</option>
+              <option value="maize" data-i18n="crop_maize">Maize</option>
+              <option value="cotton" data-i18n="crop_cotton">Cotton</option>
+              <option value="tomato" data-i18n="crop_tomato">Tomato</option>
+              <option value="potato" data-i18n="crop_potato">Potato</option>
+              <option value="sugarcane" data-i18n="crop_sugarcane">Sugarcane</option>
+              <option value="soybean" data-i18n="crop_soybean">Soybean</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label" data-i18n="location_label">Location</label>
+            <input type="text" class="form-input" id="aiLocation" placeholder="e.g. Hyderabad, India" data-placeholder="location_placeholder">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label" data-i18n="temperature_label">Temperature (°C)</label>
+            <input type="number" class="form-input" id="aiTemp" placeholder="e.g. 28" data-placeholder="example_28">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label" data-i18n="humidity_label">Humidity (%)</label>
+            <input type="number" class="form-input" id="aiHumidity" placeholder="e.g. 70" data-placeholder="example_70">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label" data-i18n="soil_ph_label">Soil pH</label>
+            <input type="number" step="0.1" class="form-input" id="aiPh" placeholder="e.g. 6.5" data-placeholder="example_65ph">
+          </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+          <div class="chat-message bot">
+            <div class="message-bubble" id="initialBotMessage" data-i18n="initial_bot_message">Namaste! Fill in your crop details above, then ask me anything about your farm.</div>
+          </div>
+        </div>
+
+        <div class="chat-input-container">
+          <input type="text" class="chat-input" id="chatInput" placeholder="Ask your farming question..." data-placeholder="chat_placeholder" onkeypress="if(event.key==='Enter') sendChatMessage()">
+          <button class="btn btn-accent" type="button" style="margin:0;width:auto;padding:12px 24px;" onclick="sendChatMessage()" data-i18n="send_button">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:5000";
+    const useFileRoutes = window.location.protocol === "file:";
+    const token = localStorage.getItem("token");
+    const farmerPhone = localStorage.getItem("farmerPhone");
+    const farmerName = localStorage.getItem("farmerName");
+    let currentLanguage = localStorage.getItem("language") || "en";
+    let uploadedBase64 = null;
+    let uploadedMimeType = null;
+
+    const translations = {
+      en: {
+        page_title: "AgriAI - Farmer Support System",
+        nav_dashboard: "Dashboard",
+        nav_disease: "Disease Detection",
+        nav_crop: "Crop Recommendation",
+        nav_irrigation: "Irrigation Advisory",
+        nav_ai: "AI Consultation",
+        logout_button: "Logout",
+        header_title: "🌿 AI-Powered Farmer Support System",
+        header_subtitle: "Smart weather, crop planning, irrigation guidance, disease assistance, and AI support in one farmer-friendly dashboard.",
+        card_supported_crops: "Supported Crops",
+        card_supported_crops_subtitle: "available in the recommendation engine",
+        card_backend_status: "Backend Status",
+        card_alerts: "Active Alerts",
+        card_alerts_subtitle: "weather, water, and crop-condition notices",
+        card_yield: "Yield Improvement",
+        card_yield_subtitle: "illustrative seasonal benchmark",
+        weather_title: "Live Weather",
+        weather_subtitle: "Current city weather from your Flask weather API",
+        weather_city_placeholder: "Enter city, e.g. Hyderabad",
+        weather_button: "Get Weather",
+        weather_humidity: "Humidity",
+        weather_feels_like: "Feels Like",
+        weather_wind: "Wind",
+        weather_current_conditions: "Current conditions",
+        weather_fetch_error: "Unable to fetch weather",
+        disease_shortcut_title: "Disease Detection",
+        disease_shortcut_subtitle: "Upload a plant image for AI-assisted issue detection",
+        disease_accuracy: "Detection Accuracy",
+        upload_image: "Upload Image",
+        crop_shortcut_title: "Crop Recommendation",
+        crop_shortcut_subtitle: "Get matches based on field temperature, humidity, and soil pH",
+        precision_match: "Precision Match",
+        get_recommendations: "Get Recommendations",
+        irrigation_shortcut_title: "Irrigation Advisory",
+        irrigation_shortcut_subtitle: "Estimate a watering schedule and daily water use",
+        water_savings: "Water Savings",
+        view_schedule: "View Schedule",
+        ai_shortcut_title: "AI Consultation",
+        ai_shortcut_subtitle: "Ask an agriculture question with your crop and field details",
+        assistant_status: "Assistant Status",
+        available_247: "Available 24/7",
+        start_consultation: "Start Consultation",
+        disease_page_title: "Disease Detection",
+        disease_page_subtitle: "Upload plant images for AI-assisted disease identification",
+        upload_plant_image: "Upload Plant Image",
+        drag_drop: "Drag and drop or click to upload",
+        plant_preview_alt: "Plant preview",
+        analysis_results: "Analysis Results",
+        disease_detected: "Disease Detected:",
+        confidence: "Confidence:",
+        severity: "Severity:",
+        recommended_action: "Recommended Action:",
+        analyzing_image: "AI is analyzing your image...",
+        analyze_image: "Analyze Image",
+        analyzing_button: "Analyzing...",
+        please_upload_image: "Please upload an image first",
+        crop_page_title: "Crop Recommendation",
+        crop_page_subtitle: "Match crops to your field conditions",
+        crop_info_box: "This form sends data to <strong>POST /api/recommend</strong> on your Flask backend.",
+        temperature_label: "Temperature (°C)",
+        humidity_label: "Humidity (%)",
+        soil_ph_label: "Soil pH",
+        example_28: "e.g. 28",
+        example_65: "e.g. 65",
+        example_65ph: "e.g. 6.5",
+        example_20: "e.g. 20",
+        example_55: "e.g. 55",
+        example_70: "e.g. 70",
+        example_2: "e.g. 2",
+        recommended_crops_heading: "Recommended Crops",
+        check_advisory_heading: "Check Advisory for Specific Crop",
+        crop_name_label: "Crop Name",
+        select_crop: "Select crop",
+        check_advisory: "Check Advisory",
+        crop_match: "match",
+        no_crops_match: "No strong crop match was found. Try nearby values.",
+        irrigation_page_title: "Irrigation Advisory",
+        irrigation_page_subtitle: "Optimize water usage with a simple schedule",
+        crop_type_label: "Crop Type",
+        growth_stage_label: "Growth Stage",
+        select_stage: "Select stage",
+        stage_initial: "Initial",
+        stage_development: "Development",
+        stage_mid: "Mid Season",
+        stage_late: "Late Season",
+        field_size_label: "Field Size (hectares)",
+        irrigation_schedule: "Irrigation Schedule",
+        water_required: "Water Required:",
+        frequency_label: "Frequency:",
+        next_irrigation: "Next Irrigation:",
+        water_tips: "Water Saving Tips:",
+        liters_per_day: "liters/day",
+        every_3_days: "Every 3 days",
+        tip_1: "Water early morning or late evening to reduce evaporation.",
+        tip_2: "Use drip irrigation where possible to reduce water waste.",
+        tip_3: "Check soil moisture before every irrigation cycle.",
+        tip_4: "Mulch around plants to retain moisture for longer.",
+        ai_page_title: "AI Consultation",
+        ai_page_subtitle: "Ask a farming question with crop and field details",
+        ai_info_box: "Fill in the details below, then ask a question. The AI uses your crop and location data.",
+        crop_label: "Crop",
+        location_label: "Location",
+        location_placeholder: "e.g. Hyderabad, India",
+        chat_placeholder: "Ask your farming question...",
+        send_button: "Send",
+        initial_bot_message: "Namaste! Fill in your crop details above, then ask me anything about your farm.",
+        thinking: "Thinking...",
+        backend_checking: "Checking...",
+        backend_online: "Online",
+        backend_offline: "Offline",
+        backend_start: "Start the Flask server with python3 app.py",
+        login_first: "Please login first",
+        enter_city: "Enter a city name",
+        fill_crop_inputs: "Please fill temperature, humidity, and soil pH",
+        fill_advisory_fields: "Please fill all advisory fields",
+        fill_irrigation_fields: "Please fill all fields",
+        advisory_status_optimal: "✅ Status: Optimal",
+        advisory_status_attention: "⚠️ Status: Needs Attention",
+        suggestions_heading: "💡 Suggestions:",
+        farmer_label: "Farmer",
+        phone_label: "Phone",
+        crop_wheat: "Wheat",
+        crop_rice: "Rice",
+        crop_maize: "Maize",
+        crop_potato: "Potato",
+        crop_tomato: "Tomato",
+        crop_cotton: "Cotton",
+        crop_soybean: "Soybean",
+        crop_sugarcane: "Sugarcane"
+      },
+      hi: {
+        page_title: "AgriAI - किसान सहायता प्रणाली",
+        nav_dashboard: "डैशबोर्ड",
+        nav_disease: "रोग पहचान",
+        nav_crop: "फसल सिफारिश",
+        nav_irrigation: "सिंचाई सलाह",
+        nav_ai: "एआई परामर्श",
+        logout_button: "लॉगआउट",
+        header_title: "🌿 एआई संचालित किसान सहायता प्रणाली",
+        header_subtitle: "एक ही किसान-अनुकूल डैशबोर्ड में मौसम, फसल योजना, सिंचाई मार्गदर्शन, रोग सहायता और एआई समर्थन।",
+        card_supported_crops: "समर्थित फसलें",
+        card_supported_crops_subtitle: "सिफारिश इंजन में उपलब्ध",
+        card_backend_status: "बैकएंड स्थिति",
+        card_alerts: "सक्रिय अलर्ट",
+        card_alerts_subtitle: "मौसम, पानी और फसल-स्थिति सूचनाएं",
+        card_yield: "उपज सुधार",
+        card_yield_subtitle: "उदाहरणात्मक मौसमी मानक",
+        weather_title: "लाइव मौसम",
+        weather_subtitle: "आपके Flask मौसम API से वर्तमान शहर का मौसम",
+        weather_city_placeholder: "शहर दर्ज करें, जैसे हैदराबाद",
+        weather_button: "मौसम देखें",
+        weather_humidity: "नमी",
+        weather_feels_like: "अनुभूत तापमान",
+        weather_wind: "हवा",
+        weather_current_conditions: "वर्तमान स्थिति",
+        weather_fetch_error: "मौसम प्राप्त नहीं हो सका",
+        disease_shortcut_title: "रोग पहचान",
+        disease_shortcut_subtitle: "एआई-सहायित पहचान के लिए पौधे की तस्वीर अपलोड करें",
+        disease_accuracy: "पहचान सटीकता",
+        upload_image: "छवि अपलोड करें",
+        crop_shortcut_title: "फसल सिफारिश",
+        crop_shortcut_subtitle: "तापमान, नमी और मिट्टी pH के आधार पर उपयुक्त फसलें देखें",
+        precision_match: "सटीक मिलान",
+        get_recommendations: "सिफारिशें प्राप्त करें",
+        irrigation_shortcut_title: "सिंचाई सलाह",
+        irrigation_shortcut_subtitle: "पानी देने की समय-सारणी और दैनिक उपयोग का अनुमान लगाएं",
+        water_savings: "पानी की बचत",
+        view_schedule: "समय-सारणी देखें",
+        ai_shortcut_title: "एआई परामर्श",
+        ai_shortcut_subtitle: "अपनी फसल और खेत विवरण के साथ कृषि प्रश्न पूछें",
+        assistant_status: "सहायक स्थिति",
+        available_247: "24/7 उपलब्ध",
+        start_consultation: "परामर्श शुरू करें",
+        disease_page_title: "रोग पहचान",
+        disease_page_subtitle: "एआई-सहायित रोग पहचान के लिए पौधों की तस्वीरें अपलोड करें",
+        upload_plant_image: "पौधे की तस्वीर अपलोड करें",
+        drag_drop: "खींचें और छोड़ें या अपलोड करने के लिए क्लिक करें",
+        plant_preview_alt: "पौधे की झलक",
+        analysis_results: "विश्लेषण परिणाम",
+        disease_detected: "पहचाना गया रोग:",
+        confidence: "विश्वास स्तर:",
+        severity: "गंभीरता:",
+        recommended_action: "सुझाई गई कार्रवाई:",
+        analyzing_image: "एआई आपकी छवि का विश्लेषण कर रहा है...",
+        analyze_image: "छवि का विश्लेषण करें",
+        analyzing_button: "विश्लेषण हो रहा है...",
+        please_upload_image: "कृपया पहले एक छवि अपलोड करें",
+        crop_page_title: "फसल सिफारिश",
+        crop_page_subtitle: "अपने खेत की स्थिति के अनुसार फसलें मिलाएं",
+        crop_info_box: "यह फ़ॉर्म आपके Flask बैकएंड के <strong>POST /api/recommend</strong> पर डेटा भेजता है।",
+        temperature_label: "तापमान (°C)",
+        humidity_label: "नमी (%)",
+        soil_ph_label: "मिट्टी pH",
+        example_28: "जैसे 28",
+        example_65: "जैसे 65",
+        example_65ph: "जैसे 6.5",
+        example_20: "जैसे 20",
+        example_55: "जैसे 55",
+        example_70: "जैसे 70",
+        example_2: "जैसे 2",
+        recommended_crops_heading: "सुझाई गई फसलें",
+        check_advisory_heading: "विशिष्ट फसल के लिए सलाह देखें",
+        crop_name_label: "फसल का नाम",
+        select_crop: "फसल चुनें",
+        check_advisory: "सलाह देखें",
+        crop_match: "मिलान",
+        no_crops_match: "कोई मजबूत फसल मिलान नहीं मिला। आसपास के मानों के साथ फिर प्रयास करें।",
+        irrigation_page_title: "सिंचाई सलाह",
+        irrigation_page_subtitle: "सरल शेड्यूल से पानी का उपयोग बेहतर करें",
+        crop_type_label: "फसल प्रकार",
+        growth_stage_label: "विकास चरण",
+        select_stage: "चरण चुनें",
+        stage_initial: "प्रारंभिक",
+        stage_development: "विकास",
+        stage_mid: "मध्य मौसम",
+        stage_late: "अंतिम मौसम",
+        field_size_label: "खेत का आकार (हेक्टेयर)",
+        irrigation_schedule: "सिंचाई समय-सारणी",
+        water_required: "आवश्यक पानी:",
+        frequency_label: "आवृत्ति:",
+        next_irrigation: "अगली सिंचाई:",
+        water_tips: "पानी बचाने के सुझाव:",
+        liters_per_day: "लीटर/दिन",
+        every_3_days: "हर 3 दिन",
+        tip_1: "वाष्पीकरण कम करने के लिए सुबह जल्दी या शाम को पानी दें।",
+        tip_2: "पानी की बर्बादी कम करने के लिए जहां संभव हो ड्रिप सिंचाई का उपयोग करें।",
+        tip_3: "हर सिंचाई चक्र से पहले मिट्टी की नमी जांचें।",
+        tip_4: "नमी बनाए रखने के लिए पौधों के आसपास मल्च लगाएं।",
+        ai_page_title: "एआई परामर्श",
+        ai_page_subtitle: "अपनी फसल और खेत विवरण के साथ कृषि प्रश्न पूछें",
+        ai_info_box: "नीचे विवरण भरें, फिर प्रश्न पूछें। एआई आपकी फसल और स्थान की जानकारी का उपयोग करता है।",
+        crop_label: "फसल",
+        location_label: "स्थान",
+        location_placeholder: "जैसे हैदराबाद, भारत",
+        chat_placeholder: "अपना खेती से जुड़ा प्रश्न पूछें...",
+        send_button: "भेजें",
+        initial_bot_message: "नमस्ते! ऊपर अपनी फसल की जानकारी भरें, फिर अपने खेत के बारे में कुछ भी पूछें।",
+        thinking: "सोच रहा है...",
+        backend_checking: "जांच हो रही है...",
+        backend_online: "ऑनलाइन",
+        backend_offline: "ऑफलाइन",
+        backend_start: "Flask सर्वर को python3 app.py से शुरू करें",
+        login_first: "कृपया पहले लॉगिन करें",
+        enter_city: "कृपया शहर का नाम दर्ज करें",
+        fill_crop_inputs: "कृपया तापमान, नमी और मिट्टी pH भरें",
+        fill_advisory_fields: "कृपया सलाह के सभी फ़ील्ड भरें",
+        fill_irrigation_fields: "कृपया सभी फ़ील्ड भरें",
+        advisory_status_optimal: "✅ स्थिति: उपयुक्त",
+        advisory_status_attention: "⚠️ स्थिति: ध्यान दें",
+        suggestions_heading: "💡 सुझाव:",
+        farmer_label: "किसान",
+        phone_label: "फ़ोन",
+        crop_wheat: "गेहूं",
+        crop_rice: "धान",
+        crop_maize: "मक्का",
+        crop_potato: "आलू",
+        crop_tomato: "टमाटर",
+        crop_cotton: "कपास",
+        crop_soybean: "सोयाबीन",
+        crop_sugarcane: "गन्ना"
+      },
+      te: {
+        page_title: "AgriAI - రైతు సహాయ వ్యవస్థ",
+        nav_dashboard: "డ్యాష్‌బోర్డ్",
+        nav_disease: "రోగ గుర్తింపు",
+        nav_crop: "పంట సిఫార్సు",
+        nav_irrigation: "పారుదల సలహా",
+        nav_ai: "ఏఐ సంప్రదింపు",
+        logout_button: "లాగ్ అవుట్",
+        header_title: "🌿 ఏఐ ఆధారిత రైతు సహాయ వ్యవస్థ",
+        header_subtitle: "ఒకే రైతు-స్నేహపూర్వక డ్యాష్‌బోర్డ్‌లో వాతావరణం, పంట ప్రణాళిక, పారుదల మార్గదర్శకం, రోగ సహాయం మరియు ఏఐ మద్దతు.",
+        card_supported_crops: "మద్దతు ఉన్న పంటలు",
+        card_supported_crops_subtitle: "సిఫార్సు యంత్రంలో అందుబాటులో ఉన్నాయి",
+        card_backend_status: "బ్యాక్‌ఎండ్ స్థితి",
+        card_alerts: "క్రియాశీల అలర్ట్లు",
+        card_alerts_subtitle: "వాతావరణం, నీరు మరియు పంట స్థితి నోటీసులు",
+        card_yield: "ఉత్పత్తి మెరుగుదల",
+        card_yield_subtitle: "ఉదాహరణాత్మక సీజనల్ ప్రమాణం",
+        weather_title: "ప్రత్యక్ష వాతావరణం",
+        weather_subtitle: "మీ Flask వాతావరణ API నుండి ప్రస్తుత నగర వాతావరణం",
+        weather_city_placeholder: "నగరాన్ని నమోదు చేయండి, ఉదా: హైదరాబాద్",
+        weather_button: "వాతావరణం చూడండి",
+        weather_humidity: "ఆర్ద్రత",
+        weather_feels_like: "అనుభూతి ఉష్ణోగ్రత",
+        weather_wind: "గాలి",
+        weather_current_conditions: "ప్రస్తుత పరిస్థితి",
+        weather_fetch_error: "వాతావరణాన్ని పొందలేకపోయాము",
+        disease_shortcut_title: "రోగ గుర్తింపు",
+        disease_shortcut_subtitle: "ఏఐ సహాయంతో గుర్తింపుకోసం మొక్క చిత్రాన్ని అప్‌లోడ్ చేయండి",
+        disease_accuracy: "గుర్తింపు ఖచ్చితత్వం",
+        upload_image: "చిత్రం అప్‌లోడ్ చేయండి",
+        crop_shortcut_title: "పంట సిఫార్సు",
+        crop_shortcut_subtitle: "ఉష్ణోగ్రత, ఆర్ద్రత, మట్టి pH ఆధారంగా సరిపడే పంటలను చూడండి",
+        precision_match: "ఖచ్చితమైన సరిపోలిక",
+        get_recommendations: "సిఫార్సులు పొందండి",
+        irrigation_shortcut_title: "పారుదల సలహా",
+        irrigation_shortcut_subtitle: "నీరు పట్టే షెడ్యూల్ మరియు రోజువారీ వినియోగాన్ని అంచనా వేయండి",
+        water_savings: "నీటి ఆదా",
+        view_schedule: "షెడ్యూల్ చూడండి",
+        ai_shortcut_title: "ఏఐ సంప్రదింపు",
+        ai_shortcut_subtitle: "మీ పంట మరియు పొల వివరాలతో వ్యవసాయ ప్రశ్న అడగండి",
+        assistant_status: "సహాయక స్థితి",
+        available_247: "24/7 అందుబాటులో",
+        start_consultation: "సంప్రదింపును ప్రారంభించండి",
+        disease_page_title: "రోగ గుర్తింపు",
+        disease_page_subtitle: "ఏఐ సహాయంతో రోగ గుర్తింపుకోసం మొక్కల చిత్రాలను అప్‌లోడ్ చేయండి",
+        upload_plant_image: "మొక్క చిత్రం అప్‌లోడ్ చేయండి",
+        drag_drop: "డ్రాగ్ చేసి వదలండి లేదా అప్‌లోడ్ చేయడానికి క్లిక్ చేయండి",
+        plant_preview_alt: "మొక్క ప్రివ్యూ",
+        analysis_results: "విశ్లేషణ ఫలితాలు",
+        disease_detected: "గుర్తించిన రోగం:",
+        confidence: "నమ్మక స్థాయి:",
+        severity: "తీవ్రత:",
+        recommended_action: "సూచించిన చర్య:",
+        analyzing_image: "ఏఐ మీ చిత్రాన్ని విశ్లేషిస్తోంది...",
+        analyze_image: "చిత్రాన్ని విశ్లేషించండి",
+        analyzing_button: "విశ్లేషిస్తోంది...",
+        please_upload_image: "దయచేసి ముందుగా ఒక చిత్రం అప్‌లోడ్ చేయండి",
+        crop_page_title: "పంట సిఫార్సు",
+        crop_page_subtitle: "మీ పొల పరిస్థితులకు సరిపడే పంటలను కనుగొనండి",
+        crop_info_box: "ఈ ఫారం మీ Flask బ్యాక్‌ఎండ్‌లోని <strong>POST /api/recommend</strong> కు డేటాను పంపుతుంది.",
+        temperature_label: "ఉష్ణోగ్రత (°C)",
+        humidity_label: "ఆర్ద్రత (%)",
+        soil_ph_label: "మట్టి pH",
+        example_28: "ఉదా: 28",
+        example_65: "ఉదా: 65",
+        example_65ph: "ఉదా: 6.5",
+        example_20: "ఉదా: 20",
+        example_55: "ఉదా: 55",
+        example_70: "ఉదా: 70",
+        example_2: "ఉదా: 2",
+        recommended_crops_heading: "సిఫార్సు చేసిన పంటలు",
+        check_advisory_heading: "నిర్దిష్ట పంటకు సలహా చూడండి",
+        crop_name_label: "పంట పేరు",
+        select_crop: "పంటను ఎంచుకోండి",
+        check_advisory: "సలహా చూడండి",
+        crop_match: "సరిపోలిక",
+        no_crops_match: "బలమైన పంట సరిపోలిక కనిపించలేదు. సమీప విలువలతో మళ్లీ ప్రయత్నించండి.",
+        irrigation_page_title: "పారుదల సలహా",
+        irrigation_page_subtitle: "సరళమైన షెడ్యూల్‌తో నీటి వినియోగాన్ని మెరుగుపరచండి",
+        crop_type_label: "పంట రకం",
+        growth_stage_label: "వృద్ధి దశ",
+        select_stage: "దశను ఎంచుకోండి",
+        stage_initial: "ప్రారంభ",
+        stage_development: "అభివృద్ధి",
+        stage_mid: "మధ్య సీజన్",
+        stage_late: "చివరి సీజన్",
+        field_size_label: "పొల పరిమాణం (హెక్టార్లు)",
+        irrigation_schedule: "పారుదల షెడ్యూల్",
+        water_required: "అవసరమైన నీరు:",
+        frequency_label: "పునరావృతం:",
+        next_irrigation: "తదుపరి పారుదల:",
+        water_tips: "నీటి ఆదా చిట్కాలు:",
+        liters_per_day: "లీటర్లు/రోజు",
+        every_3_days: "ప్రతి 3 రోజులకు",
+        tip_1: "ఆవిరీభవనాన్ని తగ్గించడానికి తెల్లవారుజామున లేదా సాయంత్రం నీరు పెట్టండి.",
+        tip_2: "సాధ్యమైన చోట డ్రిప్ పారుదల ఉపయోగించి నీటి వృథాను తగ్గించండి.",
+        tip_3: "ప్రతి పారుదల చక్రం ముందు మట్టి తేమను తనిఖీ చేయండి.",
+        tip_4: "తేమ ఎక్కువసేపు నిల్వ ఉండేందుకు మొక్కల చుట్టూ మల్చ్ వేయండి.",
+        ai_page_title: "ఏఐ సంప్రదింపు",
+        ai_page_subtitle: "మీ పంట మరియు పొల వివరాలతో వ్యవసాయ ప్రశ్న అడగండి",
+        ai_info_box: "క్రింద వివరాలు నింపి, తర్వాత ఒక ప్రశ్న అడగండి. ఏఐ మీ పంట మరియు ప్రదేశ వివరాలను ఉపయోగిస్తుంది.",
+        crop_label: "పంట",
+        location_label: "ప్రదేశం",
+        location_placeholder: "ఉదా: హైదరాబాద్, ఇండియా",
+        chat_placeholder: "మీ వ్యవసాయ ప్రశ్నను అడగండి...",
+        send_button: "పంపండి",
+        initial_bot_message: "నమస్తే! పై భాగంలో మీ పంట వివరాలు నింపి, తర్వాత మీ పొలం గురించి ఏదైనా అడగండి.",
+        thinking: "ఆలోచిస్తోంది...",
+        backend_checking: "తనిఖీ చేస్తోంది...",
+        backend_online: "ఆన్‌లైన్",
+        backend_offline: "ఆఫ్‌లైన్",
+        backend_start: "python3 app.py తో Flask సర్వర్‌ను ప్రారంభించండి",
+        login_first: "దయచేసి ముందుగా లాగిన్ చేయండి",
+        enter_city: "దయచేసి నగర పేరు నమోదు చేయండి",
+        fill_crop_inputs: "దయచేసి ఉష్ణోగ్రత, ఆర్ద్రత మరియు మట్టి pH పూరించండి",
+        fill_advisory_fields: "దయచేసి సలహా ఫీల్డులన్నీ పూరించండి",
+        fill_irrigation_fields: "దయచేసి అన్ని ఫీల్డులను పూరించండి",
+        advisory_status_optimal: "✅ స్థితి: అనుకూలం",
+        advisory_status_attention: "⚠️ స్థితి: శ్రద్ధ అవసరం",
+        suggestions_heading: "💡 సూచనలు:",
+        farmer_label: "రైతు",
+        phone_label: "ఫోన్",
+        crop_wheat: "గోధుమ",
+        crop_rice: "వరి",
+        crop_maize: "మొక్కజొన్న",
+        crop_potato: "బంగాళాదుంప",
+        crop_tomato: "టమాటా",
+        crop_cotton: "పత్తి",
+        crop_soybean: "సోయాబీన్",
+        crop_sugarcane: "చెరకు"
+      }
+    };
+
+    const htmlTranslationKeys = new Set(["crop_info_box"]);
+    const localeMap = { en: "en-US", hi: "hi-IN", te: "te-IN" };
+    const appState = {
+      backendOnline: null,
+      lastWeather: null,
+      cropRecommendations: null,
+      advisory: null,
+      irrigation: null,
+      disease: null
+    };
+
+    function appRoute(page) {
+      return useFileRoutes
+        ? new URL(`${page}.html`, window.location.href).href
+        : `/${page}`;
+    }
+
+    function t(key) {
+      return translations[currentLanguage]?.[key] ?? translations.en[key] ?? key;
+    }
+
+    function titleCase(text) {
+      return String(text || "")
+        .replace(/[_-]+/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    function translateCropName(crop) {
+      const normalized = String(crop || "").trim().toLowerCase().replace(/\s+/g, "_");
+      const key = `crop_${normalized}`;
+      const translated = translations[currentLanguage]?.[key] ?? translations.en[key];
+      return translated || titleCase(crop);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text ?? "";
+      return div.innerHTML;
+    }
+
+    function formatBotMessage(text) {
+      let output = String(text || "").replace(/\r\n/g, "\n");
+      output = output
+        .split("\n")
+        .filter((line) => !/^\s*\|?[-:\s|]+\|?\s*$/.test(line))
+        .map((line) => {
+          const trimmed = line.trim();
+          if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
+            return trimmed
+              .slice(1, -1)
+              .split("|")
+              .map((part) => part.trim())
+              .filter(Boolean)
+              .join(" - ");
+          }
+          return line;
+        })
+        .join("\n");
+      output = output.replace(/\*\*(.*?)\*\*/g, "$1");
+      output = output.replace(/^\s*[-*]\s+/gm, "• ");
+      return escapeHtml(output).replace(/\n/g, "<br>");
+    }
+
+    function getLocale() {
+      return localeMap[currentLanguage] || localeMap.en;
+    }
+
+    function updateUserBadge() {
+      const prefix = farmerName ? t("farmer_label") : t("phone_label");
+      const value = farmerName || farmerPhone || "";
+      document.getElementById("userBadge").textContent = value ? `${prefix}: ${value}` : prefix;
+    }
+
+    function renderBackendStatus() {
+      const statusEl = document.getElementById("statStatus");
+      const urlEl = document.getElementById("statUrl");
+
+      if (appState.backendOnline === null) {
+        statusEl.textContent = t("backend_checking");
+        statusEl.style.color = "";
+        urlEl.textContent = "";
+        return;
+      }
+
+      if (appState.backendOnline) {
+        statusEl.textContent = t("backend_online");
+        statusEl.style.color = "#2d9061";
+        urlEl.textContent = API_BASE;
+      } else {
+        statusEl.textContent = t("backend_offline");
+        statusEl.style.color = "#e53e3e";
+        urlEl.textContent = t("backend_start");
+      }
+    }
+
+    function renderWeatherResult() {
+      const target = document.getElementById("dashWeatherResult");
+      if (!appState.lastWeather) return;
+
+      const data = appState.lastWeather;
+      target.innerHTML = `
+        <div style="text-align:center;padding:15px 0;border-bottom:1px solid #e2e8f0;margin-bottom:15px;">
+          <div style="font-size:14px;color:#718096;margin-bottom:8px;">📍 ${escapeHtml(data.name)}, ${escapeHtml(data.sys.country)}</div>
+          <div style="font-size:48px;font-weight:bold;color:#2d3748;">${Math.round(data.main.temp)}°C</div>
+          <div style="color:#718096;margin-top:5px;text-transform:capitalize;">${escapeHtml(data.weather[0]?.description || t("weather_current_conditions"))}</div>
+        </div>
+        <div style="display:flex;justify-content:space-around;margin-top:10px;gap:10px;flex-wrap:wrap;">
+          <div style="text-align:center"><div style="font-size:22px;">💧</div><div style="font-size:12px;color:#718096;">${escapeHtml(t("weather_humidity"))}</div><div style="font-weight:bold;">${data.main.humidity}%</div></div>
+          <div style="text-align:center"><div style="font-size:22px;">🌡️</div><div style="font-size:12px;color:#718096;">${escapeHtml(t("weather_feels_like"))}</div><div style="font-weight:bold;">${Math.round(data.main.feels_like)}°C</div></div>
+          <div style="text-align:center"><div style="font-size:22px;">💨</div><div style="font-size:12px;color:#718096;">${escapeHtml(t("weather_wind"))}</div><div style="font-weight:bold;">${data.wind.speed} m/s</div></div>
+        </div>
+      `;
+    }
+
+    function renderCropRecommendation() {
+      if (appState.cropRecommendations === null) return;
+      const cropList = document.getElementById("cropList");
+
+      if (!appState.cropRecommendations.length) {
+        cropList.innerHTML = `<div class="alert-box alert-info">${escapeHtml(t("no_crops_match"))}</div>`;
+        return;
+      }
+
+      cropList.innerHTML = appState.cropRecommendations.map((crop) => {
+        const pct = Math.round((crop.match_score / crop.max_score) * 100);
+        return `
+          <div style="background:#fff;padding:15px;border-radius:12px;margin-bottom:10px;border-left:4px solid #2d9061;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;">
+              <strong style="font-size:16px;text-transform:capitalize;">${escapeHtml(translateCropName(crop.crop))}</strong>
+              <span style="background:#d4f4dd;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:bold;color:#2d9061;">${pct}% ${escapeHtml(t("crop_match"))}</span>
+            </div>
+            <div style="background:#e2e8f0;border-radius:10px;height:6px;margin-top:6px;">
+              <div style="height:100%;width:${pct}%;background:#2d9061;border-radius:10px;"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderAdvisoryResult() {
+      if (!appState.advisory) return;
+      const resultEl = document.getElementById("advisoryResult");
+      const isOk = appState.advisory.status === "Optimal";
+      const issueHtml = appState.advisory.issues?.length
+        ? `<ul style="padding-left:20px;margin-top:8px;">${appState.advisory.issues.map((issue) => `<li style="margin-bottom:4px;">${escapeHtml(issue)}</li>`).join("")}</ul>`
+        : "";
+      const suggestionHtml = appState.advisory.suggestions?.length
+        ? `<ul style="padding-left:20px;margin-top:8px;">${appState.advisory.suggestions.map((suggestion) => `<li style="margin-bottom:4px;">${escapeHtml(suggestion)}</li>`).join("")}</ul>`
+        : "";
+
+      resultEl.innerHTML = `
+        <div class="alert-box ${isOk ? "alert-success" : "alert-warning"}" style="margin-top:15px;">
+          <strong>${escapeHtml(isOk ? t("advisory_status_optimal") : t("advisory_status_attention"))}</strong>${issueHtml}
+        </div>
+        ${suggestionHtml ? `<div class="alert-box alert-info"><strong>${escapeHtml(t("suggestions_heading"))}</strong>${suggestionHtml}</div>` : ""}
+      `;
+    }
+
+    function renderIrrigationResult() {
+      if (!appState.irrigation) return;
+      const { water, nextDate } = appState.irrigation;
+      document.getElementById("waterAmount").textContent = `${water} ${t("liters_per_day")}`;
+      document.getElementById("frequency").textContent = t("every_3_days");
+      document.getElementById("nextIrrigation").textContent = new Date(nextDate).toLocaleDateString(getLocale(), {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+      document.getElementById("waterTips").innerHTML = [t("tip_1"), t("tip_2"), t("tip_3"), t("tip_4")]
+        .map((tip) => `<li style="margin-bottom:5px;">${escapeHtml(tip)}</li>`)
+        .join("");
+    }
+
+    function renderDiseaseResult() {
+      if (!appState.disease) return;
+      document.getElementById("diseaseName").textContent = appState.disease.disease || "-";
+      document.getElementById("confidence").textContent = appState.disease.confidence || "-";
+      document.getElementById("severity").textContent = appState.disease.severity || "-";
+      document.getElementById("recommendation").textContent = appState.disease.action || "-";
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = currentLanguage;
+      document.title = t("page_title");
+
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.dataset.i18n;
+        if (htmlTranslationKeys.has(key)) {
+          element.innerHTML = t(key);
+        } else {
+          element.textContent = t(key);
+        }
+      });
+
+      document.querySelectorAll("[data-placeholder]").forEach((element) => {
+        element.placeholder = t(element.dataset.placeholder);
+      });
+
+      document.querySelectorAll("[data-alt]").forEach((element) => {
+        element.alt = t(element.dataset.alt);
+      });
+
+      document.getElementById("languageSelect").value = currentLanguage;
+      updateUserBadge();
+      renderBackendStatus();
+      renderWeatherResult();
+      renderCropRecommendation();
+      renderAdvisoryResult();
+      renderIrrigationResult();
+      renderDiseaseResult();
+    }
+
+    if (!token || !farmerPhone) {
+      alert(t("login_first"));
+      window.location.href = appRoute("login");
+    }
+
+    function logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("farmerPhone");
+      localStorage.removeItem("farmerName");
+      localStorage.removeItem("farmerVillage");
+      localStorage.removeItem("language");
+      window.location.href = appRoute("login");
+    }
+
+    function showPage(pageName, el) {
+      document.querySelectorAll('[id$="-page"]').forEach((page) => page.classList.add("hidden"));
+      document.getElementById(`${pageName}-page`).classList.remove("hidden");
+      document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
+      if (el) {
+        el.classList.add("active");
+      } else {
+        const target = Array.from(document.querySelectorAll(".nav-item")).find((item) =>
+          item.getAttribute("onclick")?.includes(`'${pageName}'`)
+        );
+        target?.classList.add("active");
+      }
+      window.scrollTo(0, 0);
+    }
+
+    async function checkBackend() {
+      try {
+        const response = await fetch(`${API_BASE}/api/verify`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        appState.backendOnline = response.ok;
+      } catch (error) {
+        appState.backendOnline = false;
+      }
+      renderBackendStatus();
+    }
+
+    async function loadCropCount() {
+      try {
+        const response = await fetch(`${API_BASE}/api/crops`);
+        const data = await response.json();
+        document.getElementById("statCrops").textContent = data.supported_crops ? data.supported_crops.length : "-";
+      } catch (error) {
+        document.getElementById("statCrops").textContent = "-";
+      }
+    }
+
+    async function fetchWeatherDash() {
+      const city = document.getElementById("dashCity").value.trim();
+      if (!city) {
+        alert(t("enter_city"));
+        return;
+      }
+
+      document.getElementById("dashWeatherResult").innerHTML = '<div class="spinner"></div>';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/weather?city=${encodeURIComponent(city)}`);
+        const data = await response.json();
+
+        if (!response.ok || !data.main) {
+          throw new Error(data.error || data.message || t("weather_fetch_error"));
+        }
+
+        appState.lastWeather = data;
+        renderWeatherResult();
+      } catch (error) {
+        document.getElementById("dashWeatherResult").innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(error.message)}</div>`;
+      }
+    }
+
+    async function getCropRecommendation() {
+      const temp = document.getElementById("cropTemp").value;
+      const humidity = document.getElementById("cropHumidity").value;
+      const ph = document.getElementById("cropPh").value;
+
+      if (!temp || !humidity || !ph) {
+        alert(t("fill_crop_inputs"));
+        return;
+      }
+
+      document.getElementById("cropSpinner").classList.remove("hidden");
+      document.getElementById("cropApiResult").classList.add("hidden");
+      document.getElementById("cropError").classList.add("hidden");
+
+      try {
+        const response = await fetch(`${API_BASE}/api/recommend`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ temperature: Number(temp), humidity: Number(humidity), soil_ph: Number(ph) })
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to get recommendations");
+        }
+
+        appState.cropRecommendations = data.recommendations || [];
+        renderCropRecommendation();
+        document.getElementById("cropApiResult").classList.remove("hidden");
+      } catch (error) {
+        document.getElementById("cropError").innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(error.message)}</div>`;
+        document.getElementById("cropError").classList.remove("hidden");
+      } finally {
+        document.getElementById("cropSpinner").classList.add("hidden");
+      }
+    }
+
+    async function checkAdvisory() {
+      const crop = document.getElementById("advisoryCrop").value;
+      const temp = document.getElementById("advTemp").value;
+      const hum = document.getElementById("advHumidity").value;
+      const ph = document.getElementById("advPh").value;
+
+      if (!crop || !temp || !hum || !ph) {
+        alert(t("fill_advisory_fields"));
+        return;
+      }
+
+      document.getElementById("advisorySpinner").classList.remove("hidden");
+      document.getElementById("advisoryResult").classList.add("hidden");
+
+      try {
+        const response = await fetch(`${API_BASE}/api/advisory`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ crop, temperature: Number(temp), humidity: Number(hum), soil_ph: Number(ph) })
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to check advisory");
+        }
+
+        appState.advisory = data;
+        renderAdvisoryResult();
+        document.getElementById("advisoryResult").classList.remove("hidden");
+      } catch (error) {
+        document.getElementById("advisoryResult").innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(error.message)}</div>`;
+        document.getElementById("advisoryResult").classList.remove("hidden");
+      } finally {
+        document.getElementById("advisorySpinner").classList.add("hidden");
+      }
+    }
+
+    function getIrrigationAdvice() {
+      const cropType = document.getElementById("cropType").value;
+      const growthStage = document.getElementById("growthStage").value;
+      const fieldSize = document.getElementById("fieldSize").value;
+
+      if (!cropType || !growthStage || !fieldSize) {
+        alert(t("fill_irrigation_fields"));
+        return;
+      }
+
+      const stageMultiplier = { initial: 30, development: 50, mid: 70, late: 40 };
+      const water = Number(fieldSize) * (stageMultiplier[growthStage] || 50);
+      const next = new Date();
+      next.setDate(next.getDate() + 3);
+
+      appState.irrigation = {
+        water,
+        nextDate: next.toISOString()
+      };
+
+      renderIrrigationResult();
+      document.getElementById("irrigationResult").classList.remove("hidden");
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      uploadedMimeType = file.type || "image/jpeg";
+      document.getElementById("detectionResult").classList.add("hidden");
+      document.getElementById("diseaseError").classList.add("hidden");
+
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        document.getElementById("previewImg").src = loadEvent.target.result;
+        document.getElementById("imagePreview").classList.remove("hidden");
+        document.getElementById("analyzeBtn").disabled = false;
+        uploadedBase64 = loadEvent.target.result.split(",")[1];
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function analyzeDisease() {
+      if (!uploadedBase64) {
+        alert(t("please_upload_image"));
+        return;
+      }
+
+      const button = document.getElementById("analyzeBtn");
+      button.textContent = t("analyzing_button");
+      button.disabled = true;
+
+      document.getElementById("detectionResult").classList.add("hidden");
+      document.getElementById("diseaseError").classList.add("hidden");
+      document.getElementById("diseaseSpinner").classList.remove("hidden");
+
+      try {
+        const response = await fetch(`${API_BASE}/api/disease`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: uploadedBase64, mime_type: uploadedMimeType })
+        });
+        const result = await response.json();
+
+        if (!response.ok || result.error) {
+          throw new Error(result.error || "Disease analysis failed");
+        }
+
+        appState.disease = result;
+        renderDiseaseResult();
+        document.getElementById("detectionResult").classList.remove("hidden");
+      } catch (error) {
+        document.getElementById("diseaseError").innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(error.message)}</div>`;
+        document.getElementById("diseaseError").classList.remove("hidden");
+      } finally {
+        document.getElementById("diseaseSpinner").classList.add("hidden");
+        button.textContent = t("analyze_image");
+        button.disabled = false;
+      }
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById("chatInput");
+      const question = input.value.trim();
+      if (!question) return;
+
+      addChatMessage(question, "user");
+      input.value = "";
+
+      const crop = document.getElementById("aiCrop").value;
+      const location = document.getElementById("aiLocation").value || "India";
+      const temp = document.getElementById("aiTemp").value || 25;
+      const humidity = document.getElementById("aiHumidity").value || 60;
+      const ph = document.getElementById("aiPh").value || 6.5;
+
+      const loadingId = `loading-${Date.now()}`;
+      addChatMessage(t("thinking"), "bot", loadingId);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/ai-advisory`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            crop,
+            location,
+            temperature: Number(temp),
+            humidity: Number(humidity),
+            soil_ph: Number(ph),
+            question,
+            language: currentLanguage
+          })
+        });
+        const data = await response.json();
+
+        document.getElementById(loadingId)?.closest(".chat-message")?.remove();
+
+        if (!response.ok) {
+          throw new Error(data.error || "AI advisory failed");
+        }
+
+        const providerLabel = data.provider ? `[${data.provider}] ` : "";
+        addChatMessage(`🌿 ${providerLabel}${data.advisory}`, "bot");
+      } catch (error) {
+        document.getElementById(loadingId)?.closest(".chat-message")?.remove();
+        addChatMessage(`❌ ${error.message}`, "bot");
+      }
+    }
+
+    function addChatMessage(text, type, id) {
+      const container = document.getElementById("chatContainer");
+      const div = document.createElement("div");
+      div.className = `chat-message ${type}`;
+      const safeText = type === "bot" ? formatBotMessage(text) : escapeHtml(text);
+      div.innerHTML = `<div class="message-bubble" ${id ? `id="${id}"` : ""}>${safeText}</div>`;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function changeLanguage(lang) {
+      currentLanguage = translations[lang] ? lang : "en";
+      localStorage.setItem("language", currentLanguage);
+      applyTranslations();
+    }
+
+    window.addEventListener("load", () => {
+      applyTranslations();
+      checkBackend();
+      loadCropCount();
+    });
+  </script>
+</body>
+</html>

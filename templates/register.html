@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriAI - Farmer Signup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: linear-gradient(135deg, #fef9e7 0%, #f8edeb 50%, #e8f5e8 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 1.5rem;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(244, 162, 97, 0.15) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .register-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 3rem;
+      border-radius: 32px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(244, 162, 97, 0.3);
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #e76f51, #f4a261);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: "Playfair Display", serif;
+    }
+
+    .tagline { color: #6b7280; margin-bottom: 2rem; font-size: 1.05rem; }
+    .form-group { margin-bottom: 1.25rem; text-align: left; }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      color: #4b5563;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem 1.1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.7);
+      font-family: inherit;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #e76f51;
+      box-shadow: 0 0 0 4px rgba(231, 111, 81, 0.15);
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: 1.1rem;
+      background: linear-gradient(135deg, #e76f51, #f4a261);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.35s;
+      margin: 1rem 0;
+    }
+
+    .register-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(231, 111, 81, 0.35);
+    }
+
+    .register-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 16px;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      border-left: 5px solid;
+      display: none;
+      text-align: left;
+    }
+
+    .alert-success { background: rgba(212, 244, 221, 0.8); color: #2a4d3e; border-left-color: #2d9061; }
+    .alert-error { background: rgba(255, 245, 245, 0.9); color: #c53030; border-left-color: #f56565; }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.25rem;
+      color: #e76f51;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .demo-info {
+      background: rgba(244, 162, 97, 0.15);
+      border: 1px solid rgba(244, 162, 97, 0.3);
+      padding: 1rem;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: #5a4a3a;
+      text-align: left;
+    }
+
+    @media (max-width: 480px) {
+      .register-container { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="logo">AgriAI</div>
+    <p class="tagline">Join as a farmer and create your account</p>
+
+    <div id="alert" class="alert"></div>
+
+    <form id="registerForm">
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name</label>
+        <input type="text" class="form-input" id="name" name="name" placeholder="Mohd Salman" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">Farmer Phone</label>
+        <input type="tel" class="form-input" id="phone" name="phone" placeholder="+91 98765 43210" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="village">Village / Area</label>
+        <input type="text" class="form-input" id="village" name="village" placeholder="Hyderabad" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" class="form-input" id="password" name="password" placeholder="Enter your password" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirmPassword">Confirm Password</label>
+        <input type="password" class="form-input" id="confirmPassword" name="confirm_password" placeholder="Confirm your password" required>
+      </div>
+
+      <button type="submit" class="register-btn" id="registerBtn">
+        <span id="btnText">Create Account</span>
+      </button>
+    </form>
+
+    <a href="#" class="back-link" id="loginLink">Already have an account? Login</a>
+
+    <div class="demo-info">
+      <strong>Note:</strong> This form sends data to your Flask backend using <code>fetch</code> and stores the account in a local JSON file for demo use.
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:5000";
+    const useFileRoutes = window.location.protocol === "file:";
+
+    const registerForm = document.getElementById("registerForm");
+    const registerBtn = document.getElementById("registerBtn");
+    const btnText = document.getElementById("btnText");
+    const alertDiv = document.getElementById("alert");
+    const loginLink = document.getElementById("loginLink");
+
+    function appRoute(page) {
+      return useFileRoutes
+        ? new URL(`${page}.html`, window.location.href).href
+        : `/${page}`;
+    }
+
+    loginLink.href = appRoute("login");
+
+    function showAlert(message, type = "error") {
+      alertDiv.textContent = message;
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.style.display = "block";
+      setTimeout(() => {
+        alertDiv.style.display = "none";
+      }, 5000);
+    }
+
+    registerForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const village = document.getElementById("village").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
+        showAlert("Passwords do not match");
+        return;
+      }
+
+      if (password.length < 6) {
+        showAlert("Password must be at least 6 characters");
+        return;
+      }
+
+      registerBtn.disabled = true;
+      btnText.innerHTML = '<span class="spinner"></span>Creating...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, phone, village, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || "Signup failed");
+        }
+
+        showAlert("Account created successfully. Redirecting to login...", "success");
+        setTimeout(() => {
+          window.location.href = appRoute("login");
+        }, 1500);
+      } catch (error) {
+        showAlert(error.message || "Server error. Is the backend running?");
+      } finally {
+        registerBtn.disabled = false;
+        btnText.textContent = "Create Account";
+      }
+    });
+  </script>
+</body>
+</html>
