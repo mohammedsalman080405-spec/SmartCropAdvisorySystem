@@ -54,7 +54,7 @@
         .chat-container { height: 400px; overflow-y: auto; padding: 20px; background: #f7fafc; border-radius: 8px; margin-bottom: 15px; }
         .chat-message { margin-bottom: 15px; display: flex; }
         .chat-message.user { justify-content: flex-end; }
-        .message-bubble { max-width: 70%; padding: 12px 16px; border-radius: 12px; word-wrap: break-word; }
+        .message-bubble { max-width: 70%; padding: 12px 16px; border-radius: 12px; word-wrap: break-word; white-space: pre-wrap; line-height: 1.5; }
         .chat-message.user .message-bubble { background: #2d9061; color: white; }
         .chat-message.bot .message-bubble { background: white; color: #2d3748; }
         .chat-input-container { display: flex; gap: 10px; }
@@ -89,19 +89,19 @@
     <div class="logo">🌾 AgriAI</div>
     <div class="nav-menu">
         <div class="nav-item active" onclick="showPage('dashboard', this)">
-            <span>🏠</span> <span class="nav-text">Dashboard</span>
+            <span>🏠</span> <span class="nav-text" data-i18n="nav_dashboard">Dashboard</span>
         </div>
         <div class="nav-item" onclick="showPage('disease', this)">
-            <span>👁️</span> <span class="nav-text">Disease Detection</span>
+            <span>👁️</span> <span class="nav-text" data-i18n="nav_disease">Disease Detection</span>
         </div>
         <div class="nav-item" onclick="showPage('crop', this)">
-            <span>🌱</span> <span class="nav-text">Crop Recommendation</span>
+            <span>🌱</span> <span class="nav-text" data-i18n="nav_crop">Crop Recommendation</span>
         </div>
         <div class="nav-item" onclick="showPage('irrigation', this)">
-            <span>💧</span> <span class="nav-text">Irrigation Advisory</span>
+            <span>💧</span> <span class="nav-text" data-i18n="nav_irrigation">Irrigation Advisory</span>
         </div>
         <div class="nav-item" onclick="showPage('expert', this)">
-            <span>🤖</span> <span class="nav-text">AI Consultation</span>
+            <span>🤖</span> <span class="nav-text" data-i18n="nav_ai">AI Consultation</span>
         </div>
         <div class="language-selector">
             <select id="languageSelect" onchange="changeLanguage(this.value)">
@@ -115,27 +115,27 @@
 
 <div class="container">
     <div class="page-header">
-        <h1>🌿 AI-Powered Farmer Support System</h1>
-        <p>Complete agricultural intelligence platform — weather powered directly by OpenWeatherMap</p>
+        <h1 data-i18n="header_title">🌿 AI-Powered Farmer Support System</h1>
+        <p data-i18n="header_subtitle">Complete agricultural intelligence platform — weather powered directly by OpenWeatherMap</p>
     </div>
 
     <!-- ===== DASHBOARD ===== -->
     <div id="dashboard-page">
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-info"><h3>Supported Crops</h3><div class="number" id="statCrops">—</div><div class="subtitle">in database</div></div>
+                <div class="stat-info"><h3 data-i18n="card_supported_crops">Supported Crops</h3><div class="number" id="statCrops">—</div><div class="subtitle" data-i18n="card_supported_crops_subtitle">available in current backend list</div></div>
                 <div class="stat-icon icon-green">🌾</div>
             </div>
             <div class="stat-card">
-                <div class="stat-info"><h3>Backend Status</h3><div class="number" id="statStatus" style="font-size:18px;margin-top:6px;">Checking…</div><div class="subtitle" id="statUrl"></div></div>
+                <div class="stat-info"><h3 data-i18n="card_backend_status">Backend Status</h3><div class="number" id="statStatus" style="font-size:18px;margin-top:6px;">Checking…</div><div class="subtitle" id="statUrl"></div></div>
                 <div class="stat-icon icon-blue">🔗</div>
             </div>
             <div class="stat-card">
-                <div class="stat-info"><h3>Active Alerts</h3><div class="number">3</div><div class="subtitle">Immediate attention</div></div>
+                <div class="stat-info"><h3 data-i18n="card_alerts">Alerts</h3><div class="number" id="statAlerts">—</div><div class="subtitle" data-i18n="card_alerts_subtitle">not connected to real alert data yet</div></div>
                 <div class="stat-icon icon-orange">⚠️</div>
             </div>
             <div class="stat-card">
-                <div class="stat-info"><h3>Yield Improvement</h3><div class="number">23%</div><div class="subtitle">vs last season</div></div>
+                <div class="stat-info"><h3 data-i18n="card_yield">Yield Improvement</h3><div class="number" id="statYield">—</div><div class="subtitle" data-i18n="card_yield_subtitle">demo metric not implemented yet</div></div>
                 <div class="stat-icon icon-mint">📈</div>
             </div>
         </div>
@@ -145,15 +145,15 @@
             <div class="module-card">
                 <div class="module-header">
                     <div class="module-icon icon-blue">🌤️</div>
-                    <div><h3>Live Weather</h3><p>Direct from OpenWeatherMap API</p></div>
+                    <div><h3 data-i18n="weather_title">Live Weather</h3><p data-i18n="weather_subtitle">Direct from OpenWeatherMap API</p></div>
                 </div>
 
                 
 
                 <div class="city-input-row">
-                    <input type="text" id="dashCity" placeholder="Enter city e.g. Hyderabad"
+                    <input type="text" id="dashCity" placeholder="Enter city e.g. Hyderabad" data-placeholder="weather_city_placeholder"
                            onkeypress="if(event.key==='Enter') fetchWeatherDash()">
-                    <button onclick="fetchWeatherDash()">Get Weather</button>
+                    <button onclick="fetchWeatherDash()" data-i18n="weather_button">Get Weather</button>
                 </div>
                 <div id="dashWeatherResult"></div>
             </div>
@@ -162,46 +162,46 @@
             <div class="module-card">
                 <div class="module-header">
                     <div class="module-icon icon-green">👁️</div>
-                    <div><h3>Disease Detection</h3><p>AI-powered plant disease identification</p></div>
+                    <div><h3 data-i18n="disease_shortcut_title">Disease Detection</h3><p data-i18n="disease_shortcut_subtitle">AI-powered plant disease identification</p></div>
                 </div>
-                <div class="progress-label"><span>Detection Accuracy</span><span>91%</span></div>
+                <div class="progress-label"><span data-i18n="disease_accuracy">Detection Accuracy</span><span>91%</span></div>
                 <div class="progress-bar"><div class="progress-fill" style="width:91%"></div></div>
-                <button class="btn btn-primary" onclick="showPage('disease')">Upload Image</button>
+                <button class="btn btn-primary" onclick="showPage('disease')" data-i18n="upload_image">Upload Image</button>
             </div>
 
             <!-- Crop Recommendation shortcut -->
             <div class="module-card">
                 <div class="module-header">
                     <div class="module-icon icon-green">🌱</div>
-                    <div><h3>Crop Recommendation</h3><p>Smart crop selection via backend API</p></div>
+                    <div><h3 data-i18n="crop_shortcut_title">Crop Recommendation</h3><p data-i18n="crop_shortcut_subtitle">Smart crop selection via backend API</p></div>
                 </div>
-                <div class="progress-label"><span>Precision Match</span><span>94%</span></div>
+                <div class="progress-label"><span data-i18n="precision_match">Precision Match</span><span>94%</span></div>
                 <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
-                <button class="btn btn-primary" onclick="showPage('crop')">Get Recommendations</button>
+                <button class="btn btn-primary" onclick="showPage('crop')" data-i18n="get_recommendations">Get Recommendations</button>
             </div>
 
             <!-- Irrigation shortcut -->
             <div class="module-card">
                 <div class="module-header">
                     <div class="module-icon icon-blue">💧</div>
-                    <div><h3>Irrigation Advisory</h3><p>Optimal watering schedules</p></div>
+                    <div><h3 data-i18n="irrigation_shortcut_title">Irrigation Advisory</h3><p data-i18n="irrigation_shortcut_subtitle">Optimal watering schedules</p></div>
                 </div>
-                <div class="progress-label"><span>Water Savings</span><span>30%</span></div>
+                <div class="progress-label"><span data-i18n="water_savings">Water Savings</span><span>30%</span></div>
                 <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
-                <button class="btn btn-secondary" onclick="showPage('irrigation')">View Schedule</button>
+                <button class="btn btn-secondary" onclick="showPage('irrigation')" data-i18n="view_schedule">View Schedule</button>
             </div>
 
             <!-- AI Consultation shortcut -->
             <div class="module-card">
                 <div class="module-header">
                     <div class="module-icon icon-blue">🤖</div>
-                    <div><h3>AI Consultation</h3><p>Real-time support from AI assistant</p></div>
+                    <div><h3 data-i18n="ai_shortcut_title">AI Consultation</h3><p data-i18n="ai_shortcut_subtitle">Real-time support from AI assistant</p></div>
                 </div>
                 <div class="expert-status">
-                    <span class="expert-label">AI Assistant</span>
-                    <span class="expert-count">Available 24/7</span>
+                    <span class="expert-label" data-i18n="ai_assistant">AI Assistant</span>
+                    <span class="expert-count" data-i18n="available_247">Available 24/7</span>
                 </div>
-                <button class="btn btn-purple" onclick="showPage('expert')">Start Consultation</button>
+                <button class="btn btn-purple" onclick="showPage('expert')" data-i18n="start_consultation">Start Consultation</button>
             </div>
         </div>
     </div>
@@ -211,12 +211,12 @@
         <div class="module-card">
             <div class="module-header">
                 <div class="module-icon icon-green">👁️</div>
-                <div><h3>Disease Detection</h3><p>Upload plant images for AI-powered disease identification</p></div>
+                <div><h3 data-i18n="disease_page_title">Disease Detection</h3><p data-i18n="disease_page_subtitle">Upload plant images for AI-powered disease identification</p></div>
             </div>
 
             <div class="upload-area" onclick="document.getElementById('imageInput').click()">
                 <div class="upload-icon">📷</div>
-                <div class="upload-text"><strong>Upload Plant Image</strong><br>Drag and drop or click to upload</div>
+                <div class="upload-text"><strong data-i18n="upload_plant_image">Upload Plant Image</strong><br><span data-i18n="drag_drop">Drag and drop or click to upload</span></div>
                 <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
             </div>
 
@@ -225,27 +225,27 @@
             </div>
 
             <div id="detectionResult" class="hidden">
-                <h4 style="margin:20px 0 10px 0;">Analysis Results</h4>
+                <h4 style="margin:20px 0 10px 0;" data-i18n="analysis_results">Analysis Results</h4>
                 <div style="background:#f7fafc;padding:20px;border-radius:8px;">
                     <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-                        <span>Disease Detected:</span><strong id="diseaseName">-</strong>
+                        <span data-i18n="disease_detected">Disease Detected:</span><strong id="diseaseName">-</strong>
                     </div>
                     <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-                        <span>Confidence:</span><strong id="confidence">-</strong>
+                        <span data-i18n="confidence">Confidence:</span><strong id="confidence">-</strong>
                     </div>
                     <div style="display:flex;justify-content:space-between;">
-                        <span>Severity:</span><strong id="severity">-</strong>
+                        <span data-i18n="severity">Severity:</span><strong id="severity">-</strong>
                     </div>
                 </div>
                 <div style="margin-top:20px;padding:15px;background:#fff5f5;border-left:4px solid #fc8181;border-radius:4px;">
-                    <strong>Recommended Action:</strong>
+                    <strong data-i18n="recommended_action">Recommended Action:</strong>
                     <p id="recommendation" style="margin-top:8px;color:#4a5568;"></p>
                 </div>
             </div>
 
-            <div id="diseaseSpinner" class="hidden"><div class="spinner"></div><p style="text-align:center;color:#718096;font-size:13px;margin-top:8px;">AI is analyzing your image…</p></div>
+            <div id="diseaseSpinner" class="hidden"><div class="spinner"></div><p style="text-align:center;color:#718096;font-size:13px;margin-top:8px;" data-i18n="analyzing_image">AI is analyzing your image…</p></div>
             <div id="diseaseError"></div>
-            <button class="btn btn-primary" onclick="analyzeDisease()" id="analyzeBtn" disabled>Analyze Image</button>
+            <button class="btn btn-primary" onclick="analyzeDisease()" id="analyzeBtn" disabled data-i18n="analyze_image">Analyze Image</button>
         </div>
     </div>
 
@@ -254,42 +254,42 @@
         <div class="module-card">
             <div class="module-header">
                 <div class="module-icon icon-green">🌱</div>
-                <div><h3>Crop Recommendation</h3><p>Backend API match based on your field conditions</p></div>
+                <div><h3 data-i18n="crop_page_title">Crop Recommendation</h3><p data-i18n="crop_page_subtitle">Backend API match based on your field conditions</p></div>
             </div>
 
-            <div class="alert-box alert-info">
+            <div class="alert-box alert-info" data-i18n="crop_info_box">
                 💡 This form sends data to <strong>POST /api/recommend</strong> on your Flask backend.
             </div>
 
             <div class="form-group">
-                <label class="form-label">Temperature (°C)</label>
-                <input type="number" class="form-input" id="cropTemp" placeholder="e.g. 28">
+                <label class="form-label" data-i18n="temperature_label">Temperature (°C)</label>
+                <input type="number" class="form-input" id="cropTemp" placeholder="e.g. 28" data-placeholder="example_28">
             </div>
             <div class="form-group">
-                <label class="form-label">Humidity (%)</label>
-                <input type="number" class="form-input" id="cropHumidity" placeholder="e.g. 65">
+                <label class="form-label" data-i18n="humidity_label">Humidity (%)</label>
+                <input type="number" class="form-input" id="cropHumidity" placeholder="e.g. 65" data-placeholder="example_65">
             </div>
             <div class="form-group">
-                <label class="form-label">Soil pH</label>
-                <input type="number" step="0.1" class="form-input" id="cropPh" placeholder="e.g. 6.5">
+                <label class="form-label" data-i18n="soil_ph_label">Soil pH</label>
+                <input type="number" step="0.1" class="form-input" id="cropPh" placeholder="e.g. 6.5" data-placeholder="example_65ph">
             </div>
 
             <div id="cropSpinner" class="hidden"><div class="spinner"></div></div>
             <div id="cropApiResult" class="hidden">
-                <h4 style="margin:20px 0 10px 0;">✅ Recommended Crops from Backend</h4>
+                <h4 style="margin:20px 0 10px 0;" data-i18n="recommended_crops_heading">✅ Recommended Crops from Backend</h4>
                 <div id="cropList"></div>
             </div>
             <div id="cropError" class="hidden"></div>
 
-            <button class="btn btn-primary" onclick="getCropRecommendation()">Get Recommendations</button>
+            <button class="btn btn-primary" onclick="getCropRecommendation()" data-i18n="get_recommendations">Get Recommendations</button>
 
             <hr style="margin:30px 0;border:none;border-top:1px solid #e2e8f0;">
 
-            <h4 style="margin-bottom:15px;">🔍 Check Advisory for Specific Crop</h4>
+            <h4 style="margin-bottom:15px;" data-i18n="check_advisory_heading">🔍 Check Advisory for Specific Crop</h4>
             <div class="form-group">
-                <label class="form-label">Crop Name</label>
+                <label class="form-label" data-i18n="crop_name_label">Crop Name</label>
                 <select class="form-select" id="advisoryCrop">
-                    <option value="">Select crop</option>
+                    <option value="" data-i18n="select_crop">Select crop</option>
                     <option value="wheat">Wheat</option>
                     <option value="rice">Rice</option>
                     <option value="maize">Maize</option>
@@ -301,20 +301,20 @@
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label">Temperature (°C)</label>
-                <input type="number" class="form-input" id="advTemp" placeholder="e.g. 20">
+                <label class="form-label" data-i18n="temperature_label">Temperature (°C)</label>
+                <input type="number" class="form-input" id="advTemp" placeholder="e.g. 20" data-placeholder="example_20">
             </div>
             <div class="form-group">
-                <label class="form-label">Humidity (%)</label>
-                <input type="number" class="form-input" id="advHumidity" placeholder="e.g. 55">
+                <label class="form-label" data-i18n="humidity_label">Humidity (%)</label>
+                <input type="number" class="form-input" id="advHumidity" placeholder="e.g. 55" data-placeholder="example_55">
             </div>
             <div class="form-group">
-                <label class="form-label">Soil pH</label>
-                <input type="number" step="0.1" class="form-input" id="advPh" placeholder="e.g. 6.5">
+                <label class="form-label" data-i18n="soil_ph_label">Soil pH</label>
+                <input type="number" step="0.1" class="form-input" id="advPh" placeholder="e.g. 6.5" data-placeholder="example_65ph">
             </div>
             <div id="advisorySpinner" class="hidden"><div class="spinner"></div></div>
             <div id="advisoryResult" class="hidden"></div>
-            <button class="btn btn-secondary" onclick="checkAdvisory()">Check Advisory</button>
+            <button class="btn btn-secondary" onclick="checkAdvisory()" data-i18n="check_advisory">Check Advisory</button>
         </div>
     </div>
 
@@ -323,12 +323,12 @@
         <div class="module-card">
             <div class="module-header">
                 <div class="module-icon icon-blue">💧</div>
-                <div><h3>Irrigation Advisory</h3><p>Optimize water usage with smart schedules</p></div>
+                <div><h3 data-i18n="irrigation_page_title">Irrigation Advisory</h3><p data-i18n="irrigation_page_subtitle">Optimize water usage with smart schedules</p></div>
             </div>
             <div class="form-group">
-                <label class="form-label">Crop Type</label>
+                <label class="form-label" data-i18n="crop_type_label">Crop Type</label>
                 <select class="form-select" id="cropType">
-                    <option value="">Select crop</option>
+                    <option value="" data-i18n="select_crop">Select crop</option>
                     <option value="wheat">Wheat</option>
                     <option value="rice">Rice</option>
                     <option value="cotton">Cotton</option>
@@ -338,33 +338,33 @@
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label">Growth Stage</label>
+                <label class="form-label" data-i18n="growth_stage_label">Growth Stage</label>
                 <select class="form-select" id="growthStage">
-                    <option value="">Select stage</option>
-                    <option value="initial">Initial</option>
-                    <option value="development">Development</option>
-                    <option value="mid">Mid Season</option>
-                    <option value="late">Late Season</option>
+                    <option value="" data-i18n="select_stage">Select stage</option>
+                    <option value="initial" data-i18n="stage_initial">Initial</option>
+                    <option value="development" data-i18n="stage_development">Development</option>
+                    <option value="mid" data-i18n="stage_mid">Mid Season</option>
+                    <option value="late" data-i18n="stage_late">Late Season</option>
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label">Field Size (hectares)</label>
-                <input type="number" class="form-input" id="fieldSize" placeholder="e.g. 2">
+                <label class="form-label" data-i18n="field_size_label">Field Size (hectares)</label>
+                <input type="number" class="form-input" id="fieldSize" placeholder="e.g. 2" data-placeholder="example_2">
             </div>
 
             <div id="irrigationResult" class="hidden">
-                <h4 style="margin:20px 0 10px 0;">Irrigation Schedule</h4>
+                <h4 style="margin:20px 0 10px 0;" data-i18n="irrigation_schedule">Irrigation Schedule</h4>
                 <div style="background:#f7fafc;padding:20px;border-radius:8px;">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span>Water Required:</span><strong id="waterAmount">-</strong></div>
-                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span>Frequency:</span><strong id="frequency">-</strong></div>
-                    <div style="display:flex;justify-content:space-between;"><span>Next Irrigation:</span><strong id="nextIrrigation">-</strong></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span data-i18n="water_required">Water Required:</span><strong id="waterAmount">-</strong></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span data-i18n="frequency_label">Frequency:</span><strong id="frequency">-</strong></div>
+                    <div style="display:flex;justify-content:space-between;"><span data-i18n="next_irrigation">Next Irrigation:</span><strong id="nextIrrigation">-</strong></div>
                 </div>
                 <div style="margin-top:20px;padding:15px;background:#ebf8ff;border-left:4px solid #4299e1;border-radius:4px;">
-                    <strong>💡 Water Saving Tips:</strong>
+                    <strong data-i18n="water_tips">💡 Water Saving Tips:</strong>
                     <ul id="waterTips" style="margin-top:8px;color:#4a5568;padding-left:20px;"></ul>
                 </div>
             </div>
-            <button class="btn btn-secondary" onclick="getIrrigationAdvice()">View Schedule</button>
+            <button class="btn btn-secondary" onclick="getIrrigationAdvice()" data-i18n="view_schedule">View Schedule</button>
         </div>
     </div>
 
@@ -373,16 +373,16 @@
         <div class="module-card">
             <div class="module-header">
                 <div class="module-icon icon-blue">🤖</div>
-                <div><h3>AI Consultation</h3><p>Powered by <strong>POST /api/ai-advisory</strong> (Gemini)</p></div>
+                <div><h3 data-i18n="ai_page_title">AI Consultation</h3><p data-i18n="ai_page_subtitle">Powered by <strong>POST /api/ai-advisory</strong> (backend AI provider)</p></div>
             </div>
 
-            <div class="alert-box alert-info" style="margin-bottom:15px;">
+            <div class="alert-box alert-info" style="margin-bottom:15px;" data-i18n="ai_info_box">
                 Fill in the details below, then ask a question. The AI uses your crop + location data.
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
                 <div class="form-group" style="margin:0">
-                    <label class="form-label">Crop</label>
+                    <label class="form-label" data-i18n="crop_label">Crop</label>
                     <select class="form-select" id="aiCrop">
                         <option value="rice">Rice</option>
                         <option value="wheat">Wheat</option>
@@ -395,32 +395,32 @@
                     </select>
                 </div>
                 <div class="form-group" style="margin:0">
-                    <label class="form-label">Location</label>
-                    <input type="text" class="form-input" id="aiLocation" placeholder="e.g. Hyderabad, India">
+                    <label class="form-label" data-i18n="location_label">Location</label>
+                    <input type="text" class="form-input" id="aiLocation" placeholder="e.g. Hyderabad, India" data-placeholder="location_placeholder">
                 </div>
                 <div class="form-group" style="margin:0">
-                    <label class="form-label">Temperature (°C)</label>
-                    <input type="number" class="form-input" id="aiTemp" placeholder="e.g. 28">
+                    <label class="form-label" data-i18n="temperature_label">Temperature (°C)</label>
+                    <input type="number" class="form-input" id="aiTemp" placeholder="e.g. 28" data-placeholder="example_28">
                 </div>
                 <div class="form-group" style="margin:0">
-                    <label class="form-label">Humidity (%)</label>
-                    <input type="number" class="form-input" id="aiHumidity" placeholder="e.g. 70">
+                    <label class="form-label" data-i18n="humidity_label">Humidity (%)</label>
+                    <input type="number" class="form-input" id="aiHumidity" placeholder="e.g. 70" data-placeholder="example_70">
                 </div>
                 <div class="form-group" style="margin:0">
-                    <label class="form-label">Soil pH</label>
-                    <input type="number" step="0.1" class="form-input" id="aiPh" placeholder="e.g. 6.5">
+                    <label class="form-label" data-i18n="soil_ph_label">Soil pH</label>
+                    <input type="number" step="0.1" class="form-input" id="aiPh" placeholder="e.g. 6.5" data-placeholder="example_65ph">
                 </div>
             </div>
 
             <div class="chat-container" id="chatContainer">
                 <div class="chat-message bot">
-                    <div class="message-bubble">नमस्ते! 🙏 Fill in your crop details above, then ask me anything about your farm!</div>
+                    <div class="message-bubble" id="initialBotMessage">नमस्ते! 🙏 Fill in your crop details above, then ask me anything about your farm!</div>
                 </div>
             </div>
 
             <div class="chat-input-container">
-                <input type="text" class="chat-input" id="chatInput" placeholder="Ask your farming question..." onkeypress="if(event.key==='Enter') sendChatMessage()">
-                <button class="btn btn-purple" style="margin:0;width:auto;padding:12px 24px;" onclick="sendChatMessage()">Send</button>
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask your farming question..." data-placeholder="chat_placeholder" onkeypress="if(event.key==='Enter') sendChatMessage()">
+                <button class="btn btn-purple" style="margin:0;width:auto;padding:12px 24px;" onclick="sendChatMessage()" data-i18n="send_button">Send</button>
             </div>
         </div>
     </div>
@@ -440,7 +440,7 @@ function showPage(pageName, el) {
 // ─── Backend Health Check ─────────────────────────────────────
 async function checkBackend() {
     try {
-        const r = await fetch(API_BASE + '/');
+        const r = await fetch(API_BASE + '/api/health');
         if (r.ok) {
             document.getElementById('statStatus').textContent = '🟢 Online';
             document.getElementById('statStatus').style.color = '#2d9061';
@@ -527,6 +527,39 @@ function getWeatherIcon(desc) {
     if (desc.includes('snow')) return '❄️';
     if (desc.includes('mist') || desc.includes('fog') || desc.includes('haze')) return '🌫️';
     return '☀️';
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text ?? '';
+    return div.innerHTML;
+}
+
+function formatBotMessage(text) {
+    let output = (text || '').replace(/\r\n/g, '\n');
+
+    // Flatten markdown tables into readable lines for the chat bubble.
+    output = output
+        .split('\n')
+        .filter(line => !/^\s*\|?[-:\s|]+\|?\s*$/.test(line))
+        .map(line => {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+                return trimmed
+                    .slice(1, -1)
+                    .split('|')
+                    .map(part => part.trim())
+                    .filter(Boolean)
+                    .join(' - ');
+            }
+            return line;
+        })
+        .join('\n');
+
+    output = output.replace(/\*\*(.*?)\*\*/g, '$1');
+    output = output.replace(/^\s*[-*]\s+/gm, '• ');
+
+    return escapeHtml(output);
 }
 
 // ─── Crop Recommendation (backend) ───────────────────────────
@@ -644,11 +677,13 @@ function getIrrigationAdvice() {
 // ─── Disease Detection (Gemini Vision) ───────────────────────
 let uploadedImage = null;
 let uploadedBase64 = null;
+let uploadedMimeType = null;
 
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
     uploadedImage = file;
+    uploadedMimeType = file.type || 'image/jpeg';
     document.getElementById('detectionResult').classList.add('hidden');
     document.getElementById('diseaseError').classList.add('hidden');
     const reader = new FileReader();
@@ -676,7 +711,7 @@ async function analyzeDisease() {
         const res = await fetch('http://127.0.0.1:5000/api/disease', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: uploadedBase64 })
+            body: JSON.stringify({ image: uploadedBase64, mime_type: uploadedMimeType })
         });
 
         const result = await res.json();
@@ -700,7 +735,7 @@ async function analyzeDisease() {
         btn.disabled = false;
     }
 }
-// ─── AI Consultation (backend Gemini) ────────────────────────
+// ─── AI Consultation (backend AI provider) ────────────────────────
 async function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const message = input.value.trim();
@@ -721,15 +756,16 @@ async function sendChatMessage() {
         const r = await fetch(`${API_BASE}/api/ai-advisory`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ crop, location, temperature: +temp, humidity: +humidity, soil_ph: +ph })
+            body: JSON.stringify({ question: message, crop, location, temperature: +temp, humidity: +humidity, soil_ph: +ph, language: currentLanguage })
         });
         const d = await r.json();
         document.getElementById(loadingId)?.closest('.chat-message').remove();
         if (!r.ok) throw new Error(d.error || 'AI advisory failed');
-        addChatMessage('🌿 ' + d.advisory, 'bot');
+        const providerLabel = d.provider ? ` [${d.provider}]` : '';
+        addChatMessage('🌿' + providerLabel + ' ' + d.advisory, 'bot');
     } catch (e) {
         document.getElementById(loadingId)?.closest('.chat-message').remove();
-        addChatMessage('❌ ' + e.message + ' — Check your GEMINI_API_KEY in .env', 'bot');
+        addChatMessage('❌ ' + e.message, 'bot');
     }
 }
 
@@ -737,7 +773,8 @@ function addChatMessage(text, type, id) {
     const container = document.getElementById('chatContainer');
     const div = document.createElement('div');
     div.className = `chat-message ${type}`;
-    div.innerHTML = `<div class="message-bubble" ${id ? `id="${id}"` : ''}>${text}</div>`;
+    const safeText = type === 'bot' ? formatBotMessage(text) : escapeHtml(text);
+    div.innerHTML = `<div class="message-bubble" ${id ? `id="${id}"` : ''}>${safeText}</div>`;
     container.appendChild(div);
     container.scrollTop = container.scrollHeight;
 }
@@ -748,6 +785,175 @@ window.onload = () => {
     checkBackend();
     loadCropCount();
     // Pre-fill API key field if stored in session
+};
+</script>
+<script>
+const translations = {
+    en: {
+        nav_dashboard: 'Dashboard', nav_disease: 'Disease Detection', nav_crop: 'Crop Recommendation', nav_irrigation: 'Irrigation Advisory', nav_ai: 'AI Consultation',
+        header_title: '🌿 AI-Powered Farmer Support System', header_subtitle: 'Complete agricultural intelligence platform — weather powered directly by OpenWeatherMap',
+        card_supported_crops: 'Supported Crops', card_supported_crops_subtitle: 'available in current backend list', card_backend_status: 'Backend Status',
+        card_alerts: 'Alerts', card_alerts_subtitle: 'not connected to real alert data yet', card_yield: 'Yield Improvement', card_yield_subtitle: 'demo metric not implemented yet',
+        weather_title: 'Live Weather', weather_subtitle: 'Direct from OpenWeatherMap API', weather_city_placeholder: 'Enter city e.g. Hyderabad', weather_button: 'Get Weather',
+        disease_shortcut_title: 'Disease Detection', disease_shortcut_subtitle: 'AI-powered plant disease identification', disease_accuracy: 'Detection Accuracy', upload_image: 'Upload Image',
+        crop_shortcut_title: 'Crop Recommendation', crop_shortcut_subtitle: 'Smart crop selection via backend API', precision_match: 'Precision Match', get_recommendations: 'Get Recommendations',
+        irrigation_shortcut_title: 'Irrigation Advisory', irrigation_shortcut_subtitle: 'Optimal watering schedules', water_savings: 'Water Savings', view_schedule: 'View Schedule',
+        ai_shortcut_title: 'AI Consultation', ai_shortcut_subtitle: 'Real-time support from AI assistant', ai_assistant: 'AI Assistant', available_247: 'Available 24/7', start_consultation: 'Start Consultation',
+        disease_page_title: 'Disease Detection', disease_page_subtitle: 'Upload plant images for AI-powered disease identification', upload_plant_image: 'Upload Plant Image', drag_drop: 'Drag and drop or click to upload',
+        analysis_results: 'Analysis Results', disease_detected: 'Disease Detected:', confidence: 'Confidence:', severity: 'Severity:', recommended_action: 'Recommended Action:', analyzing_image: 'AI is analyzing your image…', analyze_image: 'Analyze Image',
+        crop_page_title: 'Crop Recommendation', crop_page_subtitle: 'Backend API match based on your field conditions', crop_info_box: '💡 This form sends data to <strong>POST /api/recommend</strong> on your Flask backend.',
+        temperature_label: 'Temperature (°C)', humidity_label: 'Humidity (%)', soil_ph_label: 'Soil pH', example_28: 'e.g. 28', example_65: 'e.g. 65', example_65ph: 'e.g. 6.5', example_20: 'e.g. 20', example_55: 'e.g. 55', example_70: 'e.g. 70', example_2: 'e.g. 2',
+        recommended_crops_heading: '✅ Recommended Crops from Backend', check_advisory_heading: '🔍 Check Advisory for Specific Crop', crop_name_label: 'Crop Name', select_crop: 'Select crop', check_advisory: 'Check Advisory',
+        irrigation_page_title: 'Irrigation Advisory', irrigation_page_subtitle: 'Optimize water usage with smart schedules', crop_type_label: 'Crop Type', growth_stage_label: 'Growth Stage', select_stage: 'Select stage', stage_initial: 'Initial', stage_development: 'Development', stage_mid: 'Mid Season', stage_late: 'Late Season',
+        field_size_label: 'Field Size (hectares)', irrigation_schedule: 'Irrigation Schedule', water_required: 'Water Required:', frequency_label: 'Frequency:', next_irrigation: 'Next Irrigation:', water_tips: '💡 Water Saving Tips:',
+        ai_page_title: 'AI Consultation', ai_page_subtitle: 'Powered by <strong>POST /api/ai-advisory</strong> (backend AI provider)', ai_info_box: 'Fill in the details below, then ask a question. The AI uses your crop + location data.', crop_label: 'Crop', location_label: 'Location', location_placeholder: 'e.g. Hyderabad, India', chat_placeholder: 'Ask your farming question...', send_button: 'Send', initial_bot_message: 'Namaste! 🙏 Fill in your crop details above, then ask me anything about your farm!',
+        backend_online: '🟢 Online', backend_offline: '🔴 Offline', backend_start: 'Start: python app.py', enter_city: 'Enter city', invalid_response: 'Invalid response',
+        fill_crop_inputs: 'Please fill temperature, humidity, and soil pH', no_crops_match: 'No crops matched perfectly. Try adjusting the values.', crop_match: 'match',
+        fill_advisory_fields: 'Please fill all advisory fields', status_optimal: '✅ Status: Optimal', status_attention: '⚠️ Status: Needs Attention', suggestions_heading: '💡 Suggestions:',
+        fill_irrigation_fields: 'Please fill all fields', every_3_days: 'Every 3 days', tip_1: 'Water early morning or late evening to reduce evaporation', tip_2: 'Use drip irrigation to save up to 40% water', tip_3: 'Check soil moisture before irrigating', tip_4: 'Mulch around plants to retain moisture',
+        thinking: 'Thinking… 🤔'
+    },
+    hi: {
+        nav_dashboard: 'डैशबोर्ड', nav_disease: 'रोग पहचान', nav_crop: 'फसल सिफारिश', nav_irrigation: 'सिंचाई सलाह', nav_ai: 'एआई परामर्श',
+        header_title: '🌿 एआई संचालित किसान सहायता प्रणाली', header_subtitle: 'पूरा कृषि इंटेलिजेंस प्लेटफ़ॉर्म — मौसम सीधे OpenWeatherMap से',
+        card_supported_crops: 'समर्थित फसलें', card_supported_crops_subtitle: 'मौजूदा बैकएंड सूची में उपलब्ध', card_backend_status: 'बैकएंड स्थिति',
+        card_alerts: 'अलर्ट', card_alerts_subtitle: 'अभी वास्तविक अलर्ट डेटा से जुड़ा नहीं है', card_yield: 'उपज सुधार', card_yield_subtitle: 'डेमो मीट्रिक अभी लागू नहीं है',
+        weather_title: 'लाइव मौसम', weather_subtitle: 'सीधे OpenWeatherMap API से', weather_city_placeholder: 'शहर दर्ज करें, जैसे हैदराबाद', weather_button: 'मौसम देखें',
+        disease_shortcut_title: 'रोग पहचान', disease_shortcut_subtitle: 'एआई आधारित पौधा रोग पहचान', disease_accuracy: 'पहचान सटीकता', upload_image: 'छवि अपलोड करें',
+        crop_shortcut_title: 'फसल सिफारिश', crop_shortcut_subtitle: 'बैकएंड API से स्मार्ट फसल चयन', precision_match: 'सटीक मिलान', get_recommendations: 'सिफारिशें प्राप्त करें',
+        irrigation_shortcut_title: 'सिंचाई सलाह', irrigation_shortcut_subtitle: 'उत्तम पानी देने की समय-सारणी', water_savings: 'पानी की बचत', view_schedule: 'समय-सारणी देखें',
+        ai_shortcut_title: 'एआई परामर्श', ai_shortcut_subtitle: 'एआई सहायक से तुरंत सहायता', ai_assistant: 'एआई सहायक', available_247: '24/7 उपलब्ध', start_consultation: 'परामर्श शुरू करें',
+        disease_page_title: 'रोग पहचान', disease_page_subtitle: 'एआई आधारित रोग पहचान के लिए पौधे की तस्वीर अपलोड करें', upload_plant_image: 'पौधे की तस्वीर अपलोड करें', drag_drop: 'खींचें और छोड़ें या अपलोड करने के लिए क्लिक करें',
+        analysis_results: 'विश्लेषण परिणाम', disease_detected: 'पहचाना गया रोग:', confidence: 'विश्वास स्तर:', severity: 'गंभीरता:', recommended_action: 'सुझाई गई कार्रवाई:', analyzing_image: 'एआई आपकी छवि का विश्लेषण कर रहा है…', analyze_image: 'छवि विश्लेषण करें',
+        crop_page_title: 'फसल सिफारिश', crop_page_subtitle: 'आपकी खेत की स्थिति के आधार पर बैकएंड API मिलान', crop_info_box: '💡 यह फ़ॉर्म आपके Flask बैकएंड के <strong>POST /api/recommend</strong> पर डेटा भेजता है।',
+        temperature_label: 'तापमान (°C)', humidity_label: 'नमी (%)', soil_ph_label: 'मिट्टी pH', example_28: 'जैसे 28', example_65: 'जैसे 65', example_65ph: 'जैसे 6.5', example_20: 'जैसे 20', example_55: 'जैसे 55', example_70: 'जैसे 70', example_2: 'जैसे 2',
+        recommended_crops_heading: '✅ बैकएंड से सुझाई गई फसलें', check_advisory_heading: '🔍 विशेष फसल के लिए सलाह देखें', crop_name_label: 'फसल का नाम', select_crop: 'फसल चुनें', check_advisory: 'सलाह देखें',
+        irrigation_page_title: 'सिंचाई सलाह', irrigation_page_subtitle: 'स्मार्ट शेड्यूल से पानी का उपयोग बेहतर करें', crop_type_label: 'फसल प्रकार', growth_stage_label: 'विकास चरण', select_stage: 'चरण चुनें', stage_initial: 'प्रारंभिक', stage_development: 'विकास', stage_mid: 'मध्य मौसम', stage_late: 'अंतिम मौसम',
+        field_size_label: 'खेत का आकार (हेक्टेयर)', irrigation_schedule: 'सिंचाई समय-सारणी', water_required: 'आवश्यक पानी:', frequency_label: 'आवृत्ति:', next_irrigation: 'अगली सिंचाई:', water_tips: '💡 पानी बचाने के सुझाव:',
+        ai_page_title: 'एआई परामर्श', ai_page_subtitle: '<strong>POST /api/ai-advisory</strong> (बैकएंड एआई प्रदाता) द्वारा संचालित', ai_info_box: 'नीचे विवरण भरें, फिर सवाल पूछें। एआई आपकी फसल और स्थान की जानकारी का उपयोग करेगा।', crop_label: 'फसल', location_label: 'स्थान', location_placeholder: 'जैसे हैदराबाद, भारत', chat_placeholder: 'अपना खेती से जुड़ा सवाल पूछें...', send_button: 'भेजें', initial_bot_message: 'नमस्ते! 🙏 ऊपर अपनी फसल की जानकारी भरें, फिर अपने खेत के बारे में कुछ भी पूछें!',
+        backend_online: '🟢 ऑनलाइन', backend_offline: '🔴 ऑफलाइन', backend_start: 'चलाएँ: python app.py', enter_city: 'शहर दर्ज करें', invalid_response: 'अमान्य प्रतिक्रिया',
+        fill_crop_inputs: 'कृपया तापमान, नमी और मिट्टी pH भरें', no_crops_match: 'कोई फसल पूरी तरह मेल नहीं खाई। मान बदलकर देखें।', crop_match: 'मिलान',
+        fill_advisory_fields: 'कृपया सलाह के सभी फ़ील्ड भरें', status_optimal: '✅ स्थिति: उपयुक्त', status_attention: '⚠️ स्थिति: ध्यान दें', suggestions_heading: '💡 सुझाव:',
+        fill_irrigation_fields: 'कृपया सभी फ़ील्ड भरें', every_3_days: 'हर 3 दिन', tip_1: 'वाष्पीकरण कम करने के लिए सुबह जल्दी या शाम को पानी दें', tip_2: '40% तक पानी बचाने के लिए ड्रिप सिंचाई का उपयोग करें', tip_3: 'सिंचाई से पहले मिट्टी की नमी जाँचें', tip_4: 'नमी बनाए रखने के लिए पौधों के आसपास मल्च लगाएँ',
+        thinking: 'सोच रहा है… 🤔'
+    },
+    te: {
+        nav_dashboard: 'డ్యాష్‌బోర్డ్', nav_disease: 'రోగ గుర్తింపు', nav_crop: 'పంట సిఫార్సు', nav_irrigation: 'పారుదల సలహా', nav_ai: 'ఏఐ సంప్రదింపు',
+        header_title: '🌿 ఏఐ ఆధారిత రైతు సహాయ వ్యవస్థ', header_subtitle: 'పూర్తి వ్యవసాయ ఇంటెలిజెన్స్ ప్లాట్‌ఫారం — వాతావరణ సమాచారం నేరుగా OpenWeatherMap నుండి',
+        card_supported_crops: 'మద్దతు ఉన్న పంటలు', card_supported_crops_subtitle: 'ప్రస్తుత బ్యాక్‌ఎండ్ జాబితాలో అందుబాటులో ఉన్నాయి', card_backend_status: 'బ్యాక్‌ఎండ్ స్థితి',
+        card_alerts: 'అలర్ట్లు', card_alerts_subtitle: 'ఇది ఇంకా నిజమైన అలర్ట్ డేటాతో కనెక్ట్ కాలేదు', card_yield: 'ఉత్పత్తి మెరుగుదల', card_yield_subtitle: 'డెమో మెట్రిక్ ఇంకా అమలు కాలేదు',
+        weather_title: 'ప్రత్యక్ష వాతావరణం', weather_subtitle: 'OpenWeatherMap API నుండి నేరుగా', weather_city_placeholder: 'నగరాన్ని నమోదు చేయండి, ఉదా: హైదరాబాద్', weather_button: 'వాతావరణం చూడండి',
+        disease_shortcut_title: 'రోగ గుర్తింపు', disease_shortcut_subtitle: 'ఏఐ ఆధారిత మొక్కల రోగ గుర్తింపు', disease_accuracy: 'గుర్తింపు ఖచ్చితత్వం', upload_image: 'చిత్రం అప్‌లోడ్ చేయండి',
+        crop_shortcut_title: 'పంట సిఫార్సు', crop_shortcut_subtitle: 'బ్యాక్‌ఎండ్ API ద్వారా స్మార్ట్ పంట ఎంపిక', precision_match: 'ఖచ్చితమైన సరిపోలిక', get_recommendations: 'సిఫార్సులు పొందండి',
+        irrigation_shortcut_title: 'పారుదల సలహా', irrigation_shortcut_subtitle: 'ఉత్తమ నీటి పట్టికలు', water_savings: 'నీటి ఆదా', view_schedule: 'షెడ్యూల్ చూడండి',
+        ai_shortcut_title: 'ఏఐ సంప్రదింపు', ai_shortcut_subtitle: 'ఏఐ సహాయకుడి నుండి తక్షణ సహాయం', ai_assistant: 'ఏఐ సహాయకుడు', available_247: '24/7 అందుబాటులో', start_consultation: 'సంప్రదింపును ప్రారంభించండి',
+        disease_page_title: 'రోగ గుర్తింపు', disease_page_subtitle: 'ఏఐ ఆధారిత రోగ గుర్తింపుకు మొక్క చిత్రాలను అప్‌లోడ్ చేయండి', upload_plant_image: 'మొక్క చిత్రం అప్‌లోడ్ చేయండి', drag_drop: 'డ్రాగ్ చేసి వదలండి లేదా అప్‌లోడ్ చేయడానికి క్లిక్ చేయండి',
+        analysis_results: 'విశ్లేషణ ఫలితాలు', disease_detected: 'గుర్తించిన రోగం:', confidence: 'నమ్మక స్థాయి:', severity: 'తీవ్రత:', recommended_action: 'సూచించిన చర్య:', analyzing_image: 'ఏఐ మీ చిత్రాన్ని విశ్లేషిస్తోంది…', analyze_image: 'చిత్రాన్ని విశ్లేషించండి',
+        crop_page_title: 'పంట సిఫార్సు', crop_page_subtitle: 'మీ పొల పరిస్థితుల ఆధారంగా బ్యాక్‌ఎండ్ API సరిపోలిక', crop_info_box: '💡 ఈ ఫారం మీ Flask బ్యాక్‌ఎండ్‌లోని <strong>POST /api/recommend</strong> కు డేటాను పంపుతుంది.',
+        temperature_label: 'ఉష్ణోగ్రత (°C)', humidity_label: 'ఆర్ద్రత (%)', soil_ph_label: 'మట్టి pH', example_28: 'ఉదా: 28', example_65: 'ఉదా: 65', example_65ph: 'ఉదా: 6.5', example_20: 'ఉదా: 20', example_55: 'ఉదా: 55', example_70: 'ఉదా: 70', example_2: 'ఉదా: 2',
+        recommended_crops_heading: '✅ బ్యాక్‌ఎండ్ నుండి సిఫార్సు చేసిన పంటలు', check_advisory_heading: '🔍 నిర్దిష్ట పంటకు సలహా చూడండి', crop_name_label: 'పంట పేరు', select_crop: 'పంటను ఎంచుకోండి', check_advisory: 'సలహా చూడండి',
+        irrigation_page_title: 'పారుదల సలహా', irrigation_page_subtitle: 'స్మార్ట్ షెడ్యూల్‌లతో నీటి వినియోగాన్ని మెరుగుపరచండి', crop_type_label: 'పంట రకం', growth_stage_label: 'వృద్ధి దశ', select_stage: 'దశ ఎంచుకోండి', stage_initial: 'ప్రారంభ', stage_development: 'అభివృద్ధి', stage_mid: 'మధ్య సీజన్', stage_late: 'చివరి సీజన్',
+        field_size_label: 'పొల పరిమాణం (హెక్టార్లు)', irrigation_schedule: 'పారుదల షెడ్యూల్', water_required: 'అవసరమైన నీరు:', frequency_label: 'పునరావృతం:', next_irrigation: 'తదుపరి పారుదల:', water_tips: '💡 నీటి ఆదా సూచనలు:',
+        ai_page_title: 'ఏఐ సంప్రదింపు', ai_page_subtitle: '<strong>POST /api/ai-advisory</strong> (బ్యాక్‌ఎండ్ ఏఐ ప్రొవైడర్) ఆధారితం', ai_info_box: 'క్రింద వివరాలు పూరించండి, ఆపై ఒక ప్రశ్న అడగండి. ఏఐ మీ పంట మరియు ప్రదేశ సమాచారాన్ని ఉపయోగిస్తుంది.', crop_label: 'పంట', location_label: 'ప్రదేశం', location_placeholder: 'ఉదా: హైదరాబాద్, ఇండియా', chat_placeholder: 'మీ వ్యవసాయ ప్రశ్నను అడగండి...', send_button: 'పంపండి', initial_bot_message: 'నమస్తే! 🙏 పై భాగంలో మీ పంట వివరాలు పూరించి, తర్వాత మీ పొలం గురించి ఏదైనా అడగండి!',
+        backend_online: '🟢 ఆన్‌లైన్', backend_offline: '🔴 ఆఫ్‌లైన్', backend_start: 'ప్రారంభించండి: python app.py', enter_city: 'నగరాన్ని నమోదు చేయండి', invalid_response: 'చెల్లని ప్రతిస్పందన',
+        fill_crop_inputs: 'దయచేసి ఉష్ణోగ్రత, ఆర్ద్రత మరియు మట్టి pH పూరించండి', no_crops_match: 'ఏ పంట కూడా పూర్తిగా సరిపోలలేదు. విలువలను మార్చి చూడండి.', crop_match: 'సరిపోలిక',
+        fill_advisory_fields: 'దయచేసి అన్ని సలహా ఫీల్డులను పూరించండి', status_optimal: '✅ స్థితి: అనుకూలం', status_attention: '⚠️ స్థితి: శ్రద్ధ అవసరం', suggestions_heading: '💡 సూచనలు:',
+        fill_irrigation_fields: 'దయచేసి అన్ని ఫీల్డులను పూరించండి', every_3_days: 'ప్రతి 3 రోజులకు', tip_1: 'ఆవిరీభవనాన్ని తగ్గించడానికి తెల్లవారుజామున లేదా సాయంత్రం నీరు పెట్టండి', tip_2: '40% వరకు నీటి ఆదా కోసం డ్రిప్ పారుదల వినియోగించండి', tip_3: 'పారుదల ముందు మట్టి తేమను పరిశీలించండి', tip_4: 'తేమ నిల్వ ఉండేందుకు మొక్కల చుట్టూ మల్చ్ వేయండి',
+        thinking: 'ఆలోచిస్తోంది… 🤔'
+    }
+};
+
+let currentLanguage = localStorage.getItem('language') || 'en';
+const oldCheckBackend = checkBackend;
+const oldGetCropRecommendation = getCropRecommendation;
+const oldCheckAdvisory = checkAdvisory;
+const oldGetIrrigationAdvice = getIrrigationAdvice;
+const oldAnalyzeDisease = analyzeDisease;
+const oldSendChatMessage = sendChatMessage;
+
+function t(key) { return translations[currentLanguage]?.[key] ?? translations.en[key] ?? key; }
+
+function applyTranslations() {
+    document.documentElement.lang = currentLanguage;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (['ai_page_subtitle', 'crop_info_box', 'ai_info_box'].includes(key)) el.innerHTML = t(key);
+        else el.textContent = t(key);
+    });
+    document.querySelectorAll('[data-placeholder]').forEach(el => { el.placeholder = t(el.dataset.placeholder); });
+    const initialBotMessage = document.getElementById('initialBotMessage');
+    if (initialBotMessage) initialBotMessage.textContent = t('initial_bot_message');
+    document.getElementById('languageSelect').value = currentLanguage;
+}
+
+checkBackend = async function () {
+    await oldCheckBackend();
+    const statusEl = document.getElementById('statStatus');
+    if (statusEl.textContent.toLowerCase().includes('online') || statusEl.textContent.includes('ऑनलाइन') || statusEl.textContent.includes('ఆన్‌లైన్')) statusEl.textContent = t('backend_online');
+    else statusEl.textContent = t('backend_offline');
+    const urlEl = document.getElementById('statUrl');
+    if (urlEl.textContent.toLowerCase().includes('start') || urlEl.textContent.includes('चलाएँ') || urlEl.textContent.includes('ప్రారంభించండి')) urlEl.textContent = t('backend_start');
+};
+
+getCropRecommendation = async function () {
+    const temp = document.getElementById('cropTemp').value;
+    const humidity = document.getElementById('cropHumidity').value;
+    const ph = document.getElementById('cropPh').value;
+    if (!temp || !humidity || !ph) return alert(t('fill_crop_inputs'));
+    await oldGetCropRecommendation();
+    const cropList = document.getElementById('cropList');
+    cropList.innerHTML = cropList.innerHTML.replaceAll(' match', ` ${t('crop_match')}`);
+    const cropError = document.getElementById('cropError');
+    if (cropError.innerHTML.includes('No crops matched perfectly')) cropError.innerHTML = `<div class="alert-box alert-info">${t('no_crops_match')}</div>`;
+};
+
+checkAdvisory = async function () {
+    const crop = document.getElementById('advisoryCrop').value;
+    const temp = document.getElementById('advTemp').value;
+    const hum = document.getElementById('advHumidity').value;
+    const ph = document.getElementById('advPh').value;
+    if (!crop || !temp || !hum || !ph) return alert(t('fill_advisory_fields'));
+    await oldCheckAdvisory();
+    const advisoryResult = document.getElementById('advisoryResult');
+    advisoryResult.innerHTML = advisoryResult.innerHTML
+        .replace('✅ Status: Optimal', t('status_optimal'))
+        .replace('⚠️ Status: Needs Attention', t('status_attention'))
+        .replace('💡 Suggestions:', t('suggestions_heading'));
+};
+
+getIrrigationAdvice = function () {
+    const cropType = document.getElementById('cropType').value;
+    const growthStage = document.getElementById('growthStage').value;
+    const fieldSize = document.getElementById('fieldSize').value;
+    if (!cropType || !growthStage || !fieldSize) return alert(t('fill_irrigation_fields'));
+    oldGetIrrigationAdvice();
+    document.getElementById('frequency').textContent = t('every_3_days');
+    document.getElementById('waterTips').innerHTML = [t('tip_1'), t('tip_2'), t('tip_3'), t('tip_4')].map(item => `<li style="margin-bottom:5px;">${item}</li>`).join('');
+};
+
+analyzeDisease = async function () {
+    const btn = document.getElementById('analyzeBtn');
+    if (!window.uploadedBase64 && typeof uploadedBase64 !== 'undefined' && !uploadedBase64) return;
+    btn.textContent = t('analyzing_image');
+    await oldAnalyzeDisease();
+    applyTranslations();
+};
+
+sendChatMessage = async function () {
+    await oldSendChatMessage();
+};
+
+changeLanguage = function (lang) {
+    currentLanguage = translations[lang] ? lang : 'en';
+    localStorage.setItem('language', currentLanguage);
+    applyTranslations();
+    checkBackend();
+};
+
+window.onload = () => {
+    applyTranslations();
+    checkBackend();
+    loadCropCount();
 };
 </script>
 </body>
