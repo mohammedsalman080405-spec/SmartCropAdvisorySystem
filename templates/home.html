@@ -447,6 +447,287 @@
       margin-bottom: 15px;
     }
 
+    /* Usability Suite: Voice Assistant, Bot Simulator & PDF Report */
+    .btn-pdf {
+      background: linear-gradient(135deg, #1b5e20, #2e7d32) !important;
+      color: #ffffff !important;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    .btn-pdf:hover {
+      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .voice-assistant-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .voice-mic-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-coral), var(--accent-orange));
+      color: #fff;
+      font-size: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem auto;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 15px 30px rgba(231, 111, 81, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .voice-mic-circle:hover {
+      transform: scale(1.06);
+    }
+
+    .voice-mic-circle.recording {
+      background: linear-gradient(135deg, #d32f2f, #f44336);
+      animation: voice-pulse 1.4s infinite;
+      box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+    }
+
+    @keyframes voice-pulse {
+      0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+      70% { transform: scale(1.06); box-shadow: 0 0 0 22px rgba(244, 67, 54, 0); }
+      100% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+    }
+
+    .voice-status-pill {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      background: #f1f8e9;
+      color: #2e7d32;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .voice-status-pill.active {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .audio-visualizer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      height: 28px;
+      margin: 8px 0;
+    }
+
+    .audio-visualizer .bar {
+      width: 4px;
+      height: 8px;
+      background: #2e7d32;
+      border-radius: 4px;
+      animation: bar-dance 0.8s ease-in-out infinite alternate;
+    }
+    .audio-visualizer .bar:nth-child(2) { animation-delay: 0.2s; height: 16px; }
+    .audio-visualizer .bar:nth-child(3) { animation-delay: 0.4s; height: 24px; }
+    .audio-visualizer .bar:nth-child(4) { animation-delay: 0.15s; height: 14px; }
+    .audio-visualizer .bar:nth-child(5) { animation-delay: 0.35s; height: 20px; }
+
+    @keyframes bar-dance {
+      0% { height: 6px; }
+      100% { height: 26px; }
+    }
+
+    .voice-transcript-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .voice-prompt-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .voice-chip {
+      background: #eef2f6;
+      color: #334155;
+      padding: 6px 14px;
+      border-radius: 18px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+      transition: all 0.2s;
+    }
+
+    .voice-chip:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      transform: translateY(-1px);
+    }
+
+    /* Smartphone Mockup for Bot Simulator */
+    .sim-phone-wrapper {
+      max-width: 440px;
+      margin: 0 auto;
+      background: #efeae2;
+      border-radius: 28px;
+      border: 8px solid #1e293b;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .sim-header {
+      background: #075e54;
+      color: #ffffff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sim-header.telegram {
+      background: #2481cc;
+    }
+
+    .sim-header-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #25d366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .sim-header.telegram .sim-header-avatar {
+      background: #54a9eb;
+    }
+
+    .sim-header-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .sim-header-sub {
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .sim-screen {
+      height: 380px;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #e5ddd5;
+    }
+
+    .sim-bubble-bot {
+      background: #ffffff;
+      padding: 10px 14px;
+      border-radius: 14px 14px 14px 2px;
+      max-width: 86%;
+      font-size: 0.88rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+      color: #111827;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .sim-bubble-user {
+      background: #d9fdd3;
+      padding: 10px 14px;
+      border-radius: 14px 14px 2px 14px;
+      max-width: 86%;
+      font-size: 0.88rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+      color: #111827;
+      margin-left: auto;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .sim-bubble-time {
+      font-size: 0.68rem;
+      color: #6b7280;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .sim-input-row {
+      display: flex;
+      background: #f0f2f5;
+      padding: 8px 10px;
+      gap: 6px;
+      border-top: 1px solid #d1d5db;
+    }
+
+    .sim-input-field {
+      flex: 1;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #fff;
+    }
+
+    .sim-send-btn {
+      background: #075e54;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .sim-header.telegram + .sim-screen + .sim-input-row .sim-send-btn {
+      background: #2481cc;
+    }
+
+    .channel-switch-btn {
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .channel-switch-btn.active {
+      background: #075e54;
+      color: #fff;
+      border-color: #075e54;
+    }
+
+    .channel-switch-btn.active.telegram {
+      background: #2481cc;
+      border-color: #2481cc;
+    }
+
     @media (max-width: 992px) {
       .navbar { flex-direction: column; align-items: stretch; }
       .nav-right { justify-content: flex-start; }
@@ -482,6 +763,12 @@
         </div>
         <div class="nav-item" onclick="showPage('expert', this)">
           <span>🤖</span> <span class="nav-text" data-i18n="nav_ai">AI Consultation</span>
+        </div>
+        <div class="nav-item" onclick="showPage('voice', this)">
+          <span>🎙️</span> <span class="nav-text" data-i18n="nav_voice">Voice Assistant</span>
+        </div>
+        <div class="nav-item" onclick="showPage('bot', this)">
+          <span>📲</span> <span class="nav-text" data-i18n="nav_bot">Bot Center</span>
         </div>
       </div>
       <div class="language-selector">
@@ -591,6 +878,34 @@
           </div>
           <button class="btn btn-accent" type="button" onclick="showPage('expert')" data-i18n="start_consultation">Start Consultation</button>
         </div>
+
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#e76f51,#f4a261);color:#fff;">🎙️</div>
+            <div>
+              <h3 data-i18n="voice_shortcut_title">Kisan Voice Assistant</h3>
+              <p data-i18n="voice_shortcut_subtitle">Speak in Telugu, Hindi, or English without typing</p>
+            </div>
+          </div>
+          <div class="progress-label"><span data-i18n="voice_languages">Regional Support</span><span>TE / HI / EN</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+          <button class="btn btn-primary" type="button" onclick="showPage('voice')" data-i18n="start_voice">🎙️ Speak Now</button>
+        </div>
+
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#075e54,#25d366);color:#fff;">📲</div>
+            <div>
+              <h3 data-i18n="bot_shortcut_title">WhatsApp & Telegram Bot</h3>
+              <p data-i18n="bot_shortcut_subtitle">24/7 Field Companion & Disease Scanner</p>
+            </div>
+          </div>
+          <div class="expert-status">
+            <span class="expert-label" data-i18n="bot_status">Channel Status</span>
+            <span class="expert-count" style="color:#25d366;">Active & Ready</span>
+          </div>
+          <button class="btn btn-secondary" type="button" onclick="showPage('bot')" style="background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;" data-i18n="open_bot_center">📲 Open Bot Simulator</button>
+        </div>
       </div>
     </div>
 
@@ -674,7 +989,10 @@
 
         <div id="cropSpinner" class="hidden"><div class="spinner"></div></div>
         <div id="cropApiResult" class="hidden">
-          <h4 style="margin:20px 0 10px 0;" data-i18n="recommended_crops_heading">Recommended Crops</h4>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px 0;flex-wrap:wrap;gap:10px;">
+            <h4 style="margin:0;" data-i18n="recommended_crops_heading">Recommended Crops</h4>
+            <button class="btn btn-pdf" type="button" style="width:auto;margin:0;padding:8px 16px;font-size:0.88rem;" onclick="downloadSoilHealthPdf()">📄 Download Soil Health Card (PDF)</button>
+          </div>
           <div id="cropList"></div>
         </div>
         <div id="cropError" class="hidden"></div>
@@ -822,7 +1140,176 @@
 
         <div class="chat-input-container">
           <input type="text" class="chat-input" id="chatInput" placeholder="Ask your farming question..." data-placeholder="chat_placeholder" onkeypress="if(event.key==='Enter') sendChatMessage()">
+          <button class="btn" id="voiceChatBtn" type="button" style="margin:0;width:auto;padding:12px 18px;background:#2e7d32;color:#fff;" onclick="toggleVoiceInput('chatInput', this)" title="Speak into chat">🎙️</button>
           <button class="btn btn-accent" type="button" style="margin:0;width:auto;padding:12px 24px;" onclick="sendChatMessage()" data-i18n="send_button">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎙️ MULTILINGUAL VOICE ASSISTANT PAGE -->
+    <div id="voice-page" class="hidden">
+      <div class="module-card voice-assistant-card">
+        <div class="module-header" style="justify-content:center;text-align:center;margin-bottom:0.5rem;">
+          <div class="module-icon" style="background:linear-gradient(135deg,#e76f51,#f4a261);color:#fff;">🎙️</div>
+          <div>
+            <h3 data-i18n="voice_page_title">Kisan Multilingual Voice Assistant</h3>
+            <p data-i18n="voice_page_subtitle">Speak naturally in Telugu, Hindi, or English. No typing needed!</p>
+          </div>
+        </div>
+
+        <div style="margin:1rem 0;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;">
+          <label style="font-weight:600;font-size:0.9rem;margin-right:4px;" data-i18n="select_voice_language">Voice Language:</label>
+          <div style="display:inline-flex;gap:8px;">
+            <button type="button" class="channel-switch-btn active" id="voiceLangEn" onclick="setVoiceLanguage('en')">English</button>
+            <button type="button" class="channel-switch-btn" id="voiceLangHi" onclick="setVoiceLanguage('hi')">हिंदी (Hindi)</button>
+            <button type="button" class="channel-switch-btn" id="voiceLangTe" onclick="setVoiceLanguage('te')">తెలుగు (Telugu)</button>
+          </div>
+          <button type="button" class="btn-pdf" style="margin:0;padding:6px 14px;font-size:0.82rem;" onclick="testVoiceSpeaker()">🔊 Audio Test</button>
+        </div>
+
+        <button type="button" class="voice-mic-circle" id="mainVoiceMicBtn" onclick="toggleMainVoiceAssistant()" title="Click to speak">
+          🎙️
+        </button>
+
+        <div class="audio-visualizer hidden" id="audioVisualizer">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+
+        <div>
+          <span class="voice-status-pill" id="voiceStatusPill" data-i18n="voice_tap_to_speak">Tap microphone to start speaking</span>
+        </div>
+
+        <div class="voice-transcript-card">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+            <strong style="color:#2e7d32;font-size:0.9rem;" data-i18n="voice_you_said">🗣️ You Asked:</strong>
+            <span id="voiceLangTag" style="font-size:0.75rem;color:#64748b;font-weight:600;">EN-IN</span>
+          </div>
+          <div id="voiceTranscriptText" style="color:#334155;font-size:1rem;min-height:28px;font-style:italic;">
+            "Press the microphone button and ask your farming question..."
+          </div>
+        </div>
+
+        <div class="voice-transcript-card" id="voiceResponseCard" style="border-left:4px solid #2e7d32;display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong style="color:#1b5e20;font-size:0.9rem;">🌾 AgriAI Spoken Advisory:</strong>
+            <div style="display:flex;gap:6px;">
+              <button type="button" class="btn-pdf" style="padding:4px 10px;font-size:0.78rem;" onclick="speakCurrentAnswer()">🔊 Read Aloud</button>
+              <button type="button" style="background:#e2e8f0;border:none;border-radius:8px;padding:4px 10px;font-size:0.78rem;cursor:pointer;" onclick="stopSpeaking()">⏹️ Stop</button>
+            </div>
+          </div>
+          <div id="voiceResponseText" style="color:#1e293b;font-size:1.05rem;line-height:1.5;"></div>
+        </div>
+
+        <div style="margin-top:1.5rem;">
+          <span style="font-size:0.85rem;color:#64748b;font-weight:600;" data-i18n="voice_sample_prompts">Quick Sample Prompts to Try:</span>
+          <div class="voice-prompt-chips">
+            <span class="voice-chip" onclick="simulateVoiceQuery('What is the best fertilizer for wheat?')">🌾 Best fertilizer for wheat?</span>
+            <span class="voice-chip" onclick="simulateVoiceQuery('వరి పంటకు ఎంత నీరు అవసరం?')">🌾 వరి పంటకు ఎంత నీరు అవసరం?</span>
+            <span class="voice-chip" onclick="simulateVoiceQuery('टमाटर के पत्तों पर पीले धब्बे क्यों आ रहे हैं?')">🍅 टमाटर के पत्तों पर पीले धब्बे?</span>
+            <span class="voice-chip" onclick="simulateVoiceQuery('Is rain expected in my field today?')">🌦️ Rain & spray check</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📲 WHATSAPP & TELEGRAM BOT CENTER PAGE -->
+    <div id="bot-page" class="hidden">
+      <div class="two-column" style="gap:24px;align-items:start;">
+        <!-- Left Column: Webhook & Feature Overview -->
+        <div class="module-card" style="margin:0;">
+          <div class="module-header">
+            <div class="module-icon" style="background:linear-gradient(135deg,#075e54,#25d366);color:#fff;">📲</div>
+            <div>
+              <h3 data-i18n="bot_page_title">WhatsApp & Telegram Bot Center</h3>
+              <p data-i18n="bot_page_subtitle">24/7 Field Advisor on popular messaging apps</p>
+            </div>
+          </div>
+
+          <div class="alert-box alert-info">
+            Farmers can send WhatsApp messages or Telegram commands directly from their fields without visiting the web app!
+          </div>
+
+          <h4 style="margin:16px 0 8px 0;">⚡ Live Webhook Endpoints</h4>
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px;border-radius:12px;font-family:monospace;font-size:0.85rem;margin-bottom:12px;">
+            <div style="color:#075e54;font-weight:700;">🟢 WhatsApp (Twilio / Meta):</div>
+            <div style="color:#334155;word-break:break-all;">POST /api/webhook/whatsapp</div>
+            <div style="color:#2481cc;font-weight:700;margin-top:8px;">🔵 Telegram Bot:</div>
+            <div style="color:#334155;word-break:break-all;">POST /api/webhook/telegram</div>
+          </div>
+
+          <h4 style="margin:16px 0 8px 0;">📋 Farmer Bot Commands</h4>
+          <table style="width:100%;font-size:0.88rem;border-collapse:collapse;margin-top:8px;">
+            <tr style="background:#f1f5f9;border-bottom:1px solid #cbd5e1;">
+              <th style="text-align:left;padding:8px;">Command / Message</th>
+              <th style="text-align:left;padding:8px;">What Bot Does</th>
+            </tr>
+            <tr style="border-bottom:1px solid #e2e8f0;">
+              <td style="padding:8px;font-family:monospace;font-weight:600;color:#075e54;">weather &lt;city&gt;</td>
+              <td style="padding:8px;">Fetches live temperature, humidity & spray alert</td>
+            </tr>
+            <tr style="border-bottom:1px solid #e2e8f0;">
+              <td style="padding:8px;font-family:monospace;font-weight:600;color:#075e54;">recommend &lt;temp&gt; &lt;hum&gt; &lt;pH&gt;</td>
+              <td style="padding:8px;">Returns top 3 matched crops with suitability scores</td>
+            </tr>
+            <tr style="border-bottom:1px solid #e2e8f0;">
+              <td style="padding:8px;font-family:monospace;font-weight:600;color:#075e54;">tips &lt;crop&gt;</td>
+              <td style="padding:8px;">Step-by-step irrigation, NPK & pest tips</td>
+            </tr>
+            <tr style="border-bottom:1px solid #e2e8f0;">
+              <td style="padding:8px;font-family:monospace;font-weight:600;color:#075e54;">Send Photo 📷</td>
+              <td style="padding:8px;">Instantly detects leaf diseases and suggests organic remedy</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Right Column: Interactive Smartphone Simulator -->
+        <div class="module-card" style="margin:0;padding:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h4 style="margin:0;">📱 Interactive Bot Simulator</h4>
+            <div style="display:flex;gap:6px;">
+              <button type="button" class="channel-switch-btn active" id="channelWhatsappBtn" onclick="switchSimChannel('whatsapp')">WhatsApp</button>
+              <button type="button" class="channel-switch-btn" id="channelTelegramBtn" onclick="switchSimChannel('telegram')">Telegram</button>
+            </div>
+          </div>
+
+          <!-- Smartphone Screen Mockup -->
+          <div class="sim-phone-wrapper">
+            <div class="sim-header" id="simHeader">
+              <div class="sim-header-avatar" id="simAvatar">🌾</div>
+              <div>
+                <div class="sim-header-title" id="simBotName">AgriAI Crop Advisory</div>
+                <div class="sim-header-sub" id="simBotStatus">online • 24/7 farming assistant</div>
+              </div>
+            </div>
+
+            <div class="sim-screen" id="simChatHistory">
+              <div class="sim-bubble-bot">
+                🌾 <strong>AgriAI Assistant</strong><br>
+                Namaste! I am your 24/7 farm advisory companion.<br><br>
+                Try typing:<br>
+                • <code>weather Hyderabad</code><br>
+                • <code>recommend 28 75 6.5</code><br>
+                • <code>tips rice</code>
+                <div class="sim-bubble-time">Just now</div>
+              </div>
+            </div>
+
+            <div style="background:#fff;padding:6px 10px;display:flex;gap:6px;overflow-x:auto;border-top:1px solid #e2e8f0;">
+              <button type="button" class="voice-chip" style="font-size:0.75rem;padding:3px 10px;" onclick="sendSimPreset('weather Hyderabad')">🌦️ Weather</button>
+              <button type="button" class="voice-chip" style="font-size:0.75rem;padding:3px 10px;" onclick="sendSimPreset('recommend 28 65 6.5')">🌱 Recommend</button>
+              <button type="button" class="voice-chip" style="font-size:0.75rem;padding:3px 10px;" onclick="sendSimPreset('tips tomato')">🍅 Tomato Tips</button>
+              <button type="button" class="voice-chip" style="font-size:0.75rem;padding:3px 10px;" onclick="sendSimPreset('help')">❓ Help</button>
+            </div>
+
+            <div class="sim-input-row">
+              <input type="text" class="sim-input-field" id="simInput" placeholder="Type a message or command..." onkeypress="if(event.key==='Enter') sendSimMessage()">
+              <button type="button" class="sim-send-btn" onclick="sendSimMessage()">➤</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -968,7 +1455,27 @@
         crop_tomato: "Tomato",
         crop_cotton: "Cotton",
         crop_soybean: "Soybean",
-        crop_sugarcane: "Sugarcane"
+        crop_sugarcane: "Sugarcane",
+        nav_voice: "Voice Assistant",
+        nav_bot: "Bot Center",
+        voice_shortcut_title: "Kisan Voice Assistant",
+        voice_shortcut_subtitle: "Speak in Telugu, Hindi, or English without typing",
+        voice_languages: "Regional Support",
+        start_voice: "🎙️ Speak Now",
+        bot_shortcut_title: "WhatsApp & Telegram Bot",
+        bot_shortcut_subtitle: "24/7 Field Companion & Disease Scanner",
+        bot_status: "Channel Status",
+        open_bot_center: "📲 Open Bot Simulator",
+        voice_page_title: "Kisan Multilingual Voice Assistant",
+        voice_page_subtitle: "Speak naturally in Telugu, Hindi, or English. No typing needed!",
+        select_voice_language: "Voice Language:",
+        voice_tap_to_speak: "Tap microphone to start speaking",
+        voice_listening: "Listening... Speak your query now",
+        voice_processing: "Analyzing your question...",
+        voice_you_said: "🗣️ You Asked:",
+        voice_sample_prompts: "Quick Sample Prompts to Try:",
+        bot_page_title: "WhatsApp & Telegram Bot Center",
+        bot_page_subtitle: "24/7 Field Advisor on popular messaging apps"
       },
       hi: {
         page_title: "AgriAI - किसान सहायता प्रणाली",
@@ -1099,7 +1606,27 @@
         crop_tomato: "टमाटर",
         crop_cotton: "कपास",
         crop_soybean: "सोयाबीन",
-        crop_sugarcane: "गन्ना"
+        crop_sugarcane: "गन्ना",
+        nav_voice: "ध्वनि सहायक",
+        nav_bot: "बॉट केंद्र",
+        voice_shortcut_title: "किसान ध्वनि सहायक",
+        voice_shortcut_subtitle: "बिना टाइप किए तेलुगु, हिंदी या अंग्रेजी में बोलें",
+        voice_languages: "क्षेत्रीय भाषाएं",
+        start_voice: "🎙️ बोलकर पूछें",
+        bot_shortcut_title: "व्हाट्सएप और टेलीग्राम बॉट",
+        bot_shortcut_subtitle: "24/7 खेत सलाहकार और रोग पहचानकर्ता",
+        bot_status: "चैनल स्थिति",
+        open_bot_center: "📲 बॉट सिम्युलेटर खोलें",
+        voice_page_title: "किसान बहुभाषी ध्वनि सहायक",
+        voice_page_subtitle: "तेलुगु, हिंदी या अंग्रेजी में स्वाभाविक रूप से बोलें।",
+        select_voice_language: "आवाज़ की भाषा:",
+        voice_tap_to_speak: "बोलने के लिए माइक्रोफ़ोन पर टैप करें",
+        voice_listening: "सुन रहे हैं... कृपया अपना प्रश्न बोलें",
+        voice_processing: "आपके प्रश्न का विश्लेषण किया जा रहा है...",
+        voice_you_said: "🗣️ आपने पूछा:",
+        voice_sample_prompts: "पूछने के लिए नमूना प्रश्न:",
+        bot_page_title: "व्हाट्सएप और टेलीग्राम बॉट केंद्र",
+        bot_page_subtitle: "लोकप्रिय मैसेजिंग ऐप पर 24/7 खेत सलाहकार"
       },
       te: {
         page_title: "AgriAI - రైతు సహాయ వ్యవస్థ",
@@ -1230,7 +1757,27 @@
         crop_tomato: "టమాటా",
         crop_cotton: "పత్తి",
         crop_soybean: "సోయాబీన్",
-        crop_sugarcane: "చెరకు"
+        crop_sugarcane: "చెరకు",
+        nav_voice: "వాయిస్ అసిస్టెంట్",
+        nav_bot: "బాట్ సెంటర్",
+        voice_shortcut_title: "కిసాన్ వాయిస్ అసిస్టెంట్",
+        voice_shortcut_subtitle: "టైప్ చేయకుండా తెలుగు, హిందీ లేదా ఇంగ్లీషులో మాట్లాడండి",
+        voice_languages: "ప్రాంతీయ మద్దతు",
+        start_voice: "🎙️ మాట్లాడండి",
+        bot_shortcut_title: "వాట్సాప్ & టెలిగ్రామ్ బాట్",
+        bot_shortcut_subtitle: "24/7 వ్యవసాయ సలహాదారు",
+        bot_status: "ఛానల్ స్థితి",
+        open_bot_center: "📲 బాట్ సిమ్యులేటర్ తెరవండి",
+        voice_page_title: "కిసాన్ బహుభాషా వాయిస్ అసిస్టెంట్",
+        voice_page_subtitle: "తెలుగు, హిందీ లేదా ఆంగ్లంలో సహజంగా మాట్లాడండి.",
+        select_voice_language: "వాయిస్ భాష:",
+        voice_tap_to_speak: "మాట్లాడటానికి మైక్రోఫోన్‌ను తాకండి",
+        voice_listening: "వింటున్నాము... మీ ప్రశ్న చెప్పండి",
+        voice_processing: "పరిశీలిస్తున్నాము...",
+        voice_you_said: "🗣️ మీరు అడిగినది:",
+        voice_sample_prompts: "ప్రయత్నించడానికి నమూనా ప్రశ్నలు:",
+        bot_page_title: "వాట్సాప్ & టెలిగ్రామ్ బాట్ సెంటర్",
+        bot_page_subtitle: "మీ మొబైల్ యాప్‌లలో 24/7 వ్యవసాయ మార్గదర్శి"
       }
     };
 
@@ -1737,6 +2284,393 @@
       currentLanguage = translations[lang] ? lang : "en";
       localStorage.setItem("language", currentLanguage);
       applyTranslations();
+    }
+
+    // =========================================================================
+    // 🗣️ RURAL FARMER USABILITY: VOICE, PDF & BOT SCRIPTS
+    // =========================================================================
+
+    let currentVoiceLang = "en";
+    let activeRecognition = null;
+    let lastVoiceReplyText = "";
+
+    function setVoiceLanguage(lang) {
+      currentVoiceLang = lang;
+      document.querySelectorAll("#voice-page .channel-switch-btn").forEach(btn => btn.classList.remove("active"));
+      if (lang === "en") document.getElementById("voiceLangEn")?.classList.add("active");
+      if (lang === "hi") document.getElementById("voiceLangHi")?.classList.add("active");
+      if (lang === "te") document.getElementById("voiceLangTe")?.classList.add("active");
+
+      const tag = document.getElementById("voiceLangTag");
+      if (tag) tag.textContent = lang === "hi" ? "HI-IN" : lang === "te" ? "TE-IN" : "EN-IN";
+    }
+
+    function getSpeechLocale(lang) {
+      if (lang === "hi") return "hi-IN";
+      if (lang === "te") return "te-IN";
+      return "en-IN";
+    }
+
+    function toggleVoiceInput(targetInputId, btnEl) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.");
+        return;
+      }
+
+      if (activeRecognition) {
+        activeRecognition.stop();
+        activeRecognition = null;
+        btnEl?.classList.remove("recording");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = getSpeechLocale(currentLanguage);
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      btnEl?.classList.add("recording");
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        const targetInput = document.getElementById(targetInputId);
+        if (targetInput) {
+          targetInput.value = transcript;
+          targetInput.focus();
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn("Speech recognition error:", event.error);
+        btnEl?.classList.remove("recording");
+        activeRecognition = null;
+      };
+
+      recognition.onend = () => {
+        btnEl?.classList.remove("recording");
+        activeRecognition = null;
+      };
+
+      activeRecognition = recognition;
+      recognition.start();
+    }
+
+    function toggleMainVoiceAssistant() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const micBtn = document.getElementById("mainVoiceMicBtn");
+      const statusPill = document.getElementById("voiceStatusPill");
+      const transcriptBox = document.getElementById("voiceTranscriptText");
+
+      if (!SpeechRecognition) {
+        alert("Web Speech recognition is not supported in this browser. You can still test with the sample prompt chips below!");
+        return;
+      }
+
+      if (activeRecognition) {
+        activeRecognition.stop();
+        activeRecognition = null;
+        micBtn?.classList.remove("recording");
+        if (statusPill) {
+          statusPill.textContent = translations[currentLanguage]?.voice_tap_to_speak || "Tap microphone to start speaking";
+          statusPill.classList.remove("active");
+        }
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = getSpeechLocale(currentVoiceLang);
+      recognition.interimResults = true;
+
+      micBtn?.classList.add("recording");
+      if (statusPill) {
+        statusPill.textContent = translations[currentLanguage]?.voice_listening || "Listening... Speak your query now";
+        statusPill.classList.add("active");
+      }
+      if (transcriptBox) transcriptBox.textContent = "Listening to your voice...";
+
+      recognition.onresult = (event) => {
+        let interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            const finalQuery = event.results[i][0].transcript;
+            if (transcriptBox) transcriptBox.textContent = `"${finalQuery}"`;
+            processVoiceQuery(finalQuery);
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+            if (transcriptBox) transcriptBox.textContent = `"${interimTranscript}..."`;
+          }
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn("Voice assistant error:", event.error);
+        micBtn?.classList.remove("recording");
+        if (statusPill) {
+          statusPill.textContent = "Could not hear clearly. Tap mic to retry.";
+          statusPill.classList.remove("active");
+        }
+        activeRecognition = null;
+      };
+
+      recognition.onend = () => {
+        micBtn?.classList.remove("recording");
+        activeRecognition = null;
+      };
+
+      activeRecognition = recognition;
+      recognition.start();
+    }
+
+    async function processVoiceQuery(queryText) {
+      const statusPill = document.getElementById("voiceStatusPill");
+      const responseCard = document.getElementById("voiceResponseCard");
+      const responseText = document.getElementById("voiceResponseText");
+
+      if (statusPill) {
+        statusPill.textContent = translations[currentLanguage]?.voice_processing || "Analyzing your question...";
+        statusPill.classList.remove("active");
+      }
+
+      try {
+        const crop = document.getElementById("aiCrop")?.value || "crop";
+        const temp = document.getElementById("cropTemp")?.value || 28;
+        const hum = document.getElementById("cropHumidity")?.value || 65;
+        const ph = document.getElementById("cropPh")?.value || 6.5;
+
+        const response = await fetch(`${API_BASE}/api/voice-advisory`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: queryText,
+            language: currentVoiceLang,
+            crop: crop,
+            temperature: Number(temp),
+            humidity: Number(hum),
+            soil_ph: Number(ph),
+            location: localStorage.getItem("farmerVillage") || "India"
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Voice advisory failed");
+
+        lastVoiceReplyText = data.reply;
+        if (responseText) responseText.textContent = data.reply;
+        if (responseCard) responseCard.style.display = "block";
+
+        if (statusPill) statusPill.textContent = "Answer ready • Spoken aloud";
+
+        // Speak aloud automatically
+        speakText(data.reply, currentVoiceLang);
+      } catch (err) {
+        if (responseText) responseText.textContent = "Unable to process query: " + err.message;
+        if (responseCard) responseCard.style.display = "block";
+      }
+    }
+
+    function simulateVoiceQuery(queryText) {
+      const transcriptBox = document.getElementById("voiceTranscriptText");
+      if (transcriptBox) transcriptBox.textContent = `"${queryText}"`;
+      processVoiceQuery(queryText);
+    }
+
+    function speakCurrentAnswer() {
+      if (lastVoiceReplyText) {
+        speakText(lastVoiceReplyText, currentVoiceLang);
+      }
+    }
+
+    function testVoiceSpeaker() {
+      const testPhrases = {
+        en: "Namaste! The Kisan Voice Assistant audio speaker is working properly.",
+        hi: "नमस्ते! किसान ध्वनि सहायक का ऑडियो स्पीकर सही तरीके से काम कर रहा है।",
+        te: "నమస్కారం! కిసాన్ వాయిస్ అసిస్టెంట్ ఆడియో స్పీకర్ సరిగ్గా పనిచేస్తోంది."
+      };
+      speakText(testPhrases[currentVoiceLang] || testPhrases.en, currentVoiceLang);
+    }
+
+    function speakText(text, lang) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+
+      const visualizer = document.getElementById("audioVisualizer");
+      if (visualizer) visualizer.classList.remove("hidden");
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = getSpeechLocale(lang || currentVoiceLang);
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+
+      utterance.onend = () => {
+        if (visualizer) visualizer.classList.add("hidden");
+      };
+      utterance.onerror = () => {
+        if (visualizer) visualizer.classList.add("hidden");
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeaking() {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      const visualizer = document.getElementById("audioVisualizer");
+      if (visualizer) visualizer.classList.add("hidden");
+    }
+
+    // =========================================================================
+    // 📄 ONE-CLICK SOIL HEALTH & ADVISORY PDF CARD DOWNLOAD
+    // =========================================================================
+
+    async function downloadSoilHealthPdf() {
+      const btn = event?.target;
+      const originalText = btn ? btn.textContent : "Download PDF";
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "⏳ Generating Official PDF...";
+      }
+
+      try {
+        const temp = document.getElementById("cropTemp")?.value || 28;
+        const hum = document.getElementById("cropHumidity")?.value || 65;
+        const ph = document.getElementById("cropPh")?.value || 6.5;
+        const crop = document.getElementById("advisoryCrop")?.value || "";
+
+        const payload = {
+          farmer_name: localStorage.getItem("farmerName") || "Progressive Farmer",
+          phone: localStorage.getItem("farmerPhone") || "N/A",
+          village: localStorage.getItem("farmerVillage") || "Village Area",
+          temperature: Number(temp),
+          humidity: Number(hum),
+          soil_ph: Number(ph),
+          selected_crop: crop,
+          recommendations: appState.cropRecommendations || []
+        };
+
+        const response = await fetch(`${API_BASE}/api/report/pdf`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error("Failed to generate PDF card");
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = `SmartCrop_Soil_Health_${payload.farmer_name.replace(/\\s+/g, "_")}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      } catch (err) {
+        alert("Error downloading Soil Health PDF: " + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      }
+    }
+
+    // =========================================================================
+    // 📲 INTERACTIVE BOT SIMULATOR (WHATSAPP & TELEGRAM)
+    // =========================================================================
+
+    let currentSimChannel = "whatsapp";
+
+    function switchSimChannel(channel) {
+      currentSimChannel = channel;
+      const waBtn = document.getElementById("channelWhatsappBtn");
+      const tgBtn = document.getElementById("channelTelegramBtn");
+      const simHeader = document.getElementById("simHeader");
+      const botName = document.getElementById("simBotName");
+      const botAvatar = document.getElementById("simAvatar");
+
+      if (channel === "whatsapp") {
+        waBtn?.classList.add("active");
+        tgBtn?.classList.remove("active");
+        simHeader?.classList.remove("telegram");
+        if (botName) botName.textContent = "AgriAI Crop Advisory (WhatsApp)";
+        if (botAvatar) botAvatar.textContent = "🌾";
+      } else {
+        tgBtn?.classList.add("active");
+        waBtn?.classList.remove("active");
+        simHeader?.classList.add("telegram");
+        if (botName) botName.textContent = "SmartCrop Advisory Bot (Telegram)";
+        if (botAvatar) botAvatar.textContent = "🤖";
+      }
+    }
+
+    async function sendSimMessage() {
+      const input = document.getElementById("simInput");
+      const text = input ? input.value.trim() : "";
+      if (!text) return;
+
+      input.value = "";
+      await executeSimBotQuery(text);
+    }
+
+    function sendSimPreset(presetText) {
+      executeSimBotQuery(presetText);
+    }
+
+    async function executeSimBotQuery(userText) {
+      const chatScreen = document.getElementById("simChatHistory");
+      const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+      // Append user bubble
+      const userBubble = document.createElement("div");
+      userBubble.className = "sim-bubble-user";
+      userBubble.innerHTML = `${escapeHtml(userText)}<div class="sim-bubble-time">${timeStr} ✓✓</div>`;
+      chatScreen?.appendChild(userBubble);
+      if (chatScreen) chatScreen.scrollTop = chatScreen.scrollHeight;
+
+      // Loading bubble
+      const loadingBubble = document.createElement("div");
+      loadingBubble.className = "sim-bubble-bot";
+      loadingBubble.id = "simLoadingBubble";
+      loadingBubble.innerHTML = "<em>typing...</em>";
+      chatScreen?.appendChild(loadingBubble);
+      if (chatScreen) chatScreen.scrollTop = chatScreen.scrollHeight;
+
+      try {
+        const response = await fetch(`${API_BASE}/api/bot/simulate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            channel: currentSimChannel,
+            message: userText
+          })
+        });
+
+        const data = await response.json();
+        loadingBubble.remove();
+
+        const botBubble = document.createElement("div");
+        botBubble.className = "sim-bubble-bot";
+        const formatted = (data.reply || "")
+          .replace(/\\*(.*?)\\*/g, "<strong>$1</strong>")
+          .replace(/_(.*?)_/g, "<em>$1</em>")
+          .replace(/`(.*?)`/g, "<code>$1</code>")
+          .replace(/\\n/g, "<br>");
+        botBubble.innerHTML = `${formatted}<div class="sim-bubble-time">${timeStr}</div>`;
+        chatScreen?.appendChild(botBubble);
+        if (chatScreen) chatScreen.scrollTop = chatScreen.scrollHeight;
+      } catch (err) {
+        loadingBubble.remove();
+        const errBubble = document.createElement("div");
+        errBubble.className = "sim-bubble-bot";
+        errBubble.innerHTML = `⚠️ Simulation error: ${err.message}<div class="sim-bubble-time">${timeStr}</div>`;
+        chatScreen?.appendChild(errBubble);
+      }
     }
 
     window.addEventListener("load", () => {

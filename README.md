@@ -27,6 +27,15 @@ The system analyzes relevant agricultural parameters and provides suitable crop 
 * ⚡ **Fast Predictions**
   Provides crop recommendations quickly after receiving the required inputs.
 
+* 🎙️ **Multilingual Voice Assistant (Speech-to-Speech & Speech-to-Text)**
+  Speak naturally in Telugu (తెలుగు), Hindi (हिंदी), or English. Uses the browser's Web Speech API with no external API keys required, providing spoken audio advice for hands-free field use.
+
+* 📲 **WhatsApp & Telegram Advisory Bot & Simulator**
+  Connects farmers directly over WhatsApp (Twilio/Meta) and Telegram. Supports commands (`weather`, `recommend`, `tips`) and leaf photo disease inspection. Includes an in-app interactive smartphone simulator.
+
+* 📄 **One-Click Soil Health & Advisory PDF Report**
+  Generates an official, printable PDF Soil Health Card containing measured field conditions, top-ranked crop matches, tailored NPK fertilizer guidance, and irrigation schedules.
+
 ---
 
 ## 🧠 How It Works
@@ -250,6 +259,25 @@ Future versions of SmartCrop can include:
 * 🌐 Multi-language support
 * 📱 Mobile notifications
 * ☁️ Cloud deployment
+
+---
+
+## 📡 API Endpoints
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/register` | Register farmer account with phone and village |
+| `POST` | `/api/login` | Login and obtain session token |
+| `GET` | `/api/weather?city=<city>` | Current weather data and conditions |
+| `POST` | `/api/recommend` | Crop recommendations based on temp, humidity, pH |
+| `POST` | `/api/advisory` | Crop-specific environmental status and guidance |
+| `POST` | `/api/ai-advisory` | AI agricultural consultation |
+| `POST` | `/api/disease` | Pl@ntNet plant disease leaf image identification |
+| `POST` | `/api/voice-advisory` | Multilingual spoken advisory (English, Hindi, Telugu) |
+| `POST` | `/api/report/pdf` | Generate & download official Soil Health Card PDF |
+| `POST` | `/api/webhook/whatsapp` | WhatsApp bot webhook (Twilio / Meta format) |
+| `POST` | `/api/webhook/telegram` | Telegram Bot update webhook |
+| `POST` | `/api/bot/simulate` | Interactive in-dashboard bot simulator |
 
 ---
 
