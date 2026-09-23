@@ -461,6 +461,170 @@
       .city-input-row, .chat-input-container { flex-direction: column; }
       .message-bubble { max-width: 100%; }
     }
+    /* ── Crop Calendar Timeline ── */
+    .timeline-step {
+      display: flex;
+      gap: 1.25rem;
+      margin-bottom: 0.75rem;
+      align-items: flex-start;
+    }
+    .timeline-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 56px;
+    }
+    .timeline-dot {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-coral));
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(244,162,97,0.3);
+      flex-shrink: 0;
+    }
+    .timeline-dot.harvest-dot {
+      background: linear-gradient(135deg, #2d9061, #4caf50);
+    }
+    .timeline-line {
+      width: 3px;
+      flex: 1;
+      background: linear-gradient(to bottom, rgba(244,162,97,0.4), rgba(231,111,81,0.15));
+      min-height: 24px;
+      border-radius: 2px;
+      margin: 4px 0;
+    }
+    .timeline-content {
+      flex: 1;
+      background: #fff;
+      border-radius: 14px;
+      padding: 0.85rem 1.1rem;
+      border: 1px solid rgba(244,162,97,0.25);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 0;
+    }
+    .timeline-content .tl-day {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-coral);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+    .timeline-content .tl-date {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    .timeline-content .tl-event {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 1rem;
+    }
+    .timeline-content.harvest-card {
+      border-color: rgba(45,144,97,0.4);
+      background: linear-gradient(135deg, #f0fdf4, #fff);
+    }
+    .timeline-content.harvest-card .tl-day { color: #2d9061; }
+
+    /* ── Community Forum ── */
+    .tag-chip {
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      border: 2px solid var(--accent-orange);
+      background: #fff;
+      color: var(--accent-forest);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tag-chip:hover,
+    .tag-chip.active {
+      background: var(--accent-orange);
+      color: #fff;
+    }
+    .forum-post-card {
+      background: #fff;
+      border: 1px solid rgba(244,162,97,0.25);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: box-shadow 0.25s, border-color 0.25s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .forum-post-card:hover {
+      box-shadow: 0 8px 25px rgba(231,111,81,0.15);
+      border-color: var(--accent-orange);
+    }
+    .forum-post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .forum-post-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--accent-forest);
+    }
+    .forum-post-meta {
+      font-size: 0.82rem;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+    .forum-post-body {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .forum-post-footer {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .forum-tag-badge {
+      background: var(--color-primary-light);
+      color: var(--accent-forest);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 12px;
+    }
+    .reply-bubble {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.75rem;
+      border-left: 3px solid var(--accent-orange);
+    }
+    .reply-bubble.expert-reply {
+      border-left-color: #2d9061;
+      background: #f0fdf4;
+    }
+    .reply-author {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-forest);
+      margin-bottom: 4px;
+    }
+    .reply-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
   </style>
 </head>
 <body>
@@ -482,6 +646,12 @@
         </div>
         <div class="nav-item" onclick="showPage('expert', this)">
           <span>🤖</span> <span class="nav-text" data-i18n="nav_ai">AI Consultation</span>
+        </div>
+        <div class="nav-item" onclick="showPage('calendar', this)">
+          <span>📅</span> <span class="nav-text" data-i18n="nav_calendar">Crop Calendar</span>
+        </div>
+        <div class="nav-item" onclick="showPage('community', this)">
+          <span>🤝</span> <span class="nav-text" data-i18n="nav_community">Kisan Forum</span>
         </div>
       </div>
       <div class="language-selector">
@@ -828,6 +998,147 @@
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════════
+       📅 CROP CALENDAR PAGE
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="calendar-page" class="hidden">
+    <div class="container">
+      <div class="module-card">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#a8e6cf,#4caf50);color:#fff;">📅</div>
+          <div>
+            <h3 data-i18n="calendar_page_title">Crop Calendar & Task Timeline</h3>
+            <p data-i18n="calendar_page_subtitle">Generate a day-by-day timeline from sowing to harvest for your crop.</p>
+          </div>
+        </div>
+
+        <div class="two-column" style="margin-bottom:1.25rem;">
+          <div class="form-group" style="margin:0">
+            <label class="form-label" data-i18n="calendar_crop_label">Select Crop</label>
+            <select class="form-select" id="calCrop">
+              <option value="rice" data-i18n="crop_rice">Rice</option>
+              <option value="wheat" data-i18n="crop_wheat">Wheat</option>
+              <option value="maize" data-i18n="crop_maize">Maize</option>
+              <option value="cotton" data-i18n="crop_cotton">Cotton</option>
+              <option value="tomato" data-i18n="crop_tomato">Tomato</option>
+              <option value="potato" data-i18n="crop_potato">Potato</option>
+              <option value="soybean" data-i18n="crop_soybean">Soybean</option>
+              <option value="sugarcane" data-i18n="crop_sugarcane">Sugarcane</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label" data-i18n="calendar_sowing_date_label">Sowing Date</label>
+            <input type="date" class="form-input" id="calSowingDate">
+          </div>
+        </div>
+
+        <button class="btn btn-secondary" type="button" onclick="generateCalendar()" data-i18n="calendar_generate_btn">Generate Timeline</button>
+
+        <div id="calSpinner" class="hidden"><div class="spinner"></div></div>
+        <div id="calError"></div>
+
+        <div id="calResult" class="hidden" style="margin-top:2rem;">
+          <div id="calSummaryBar" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border:1px solid rgba(76,175,80,0.25);">
+            <div>
+              <div style="font-size:0.85rem;color:#6b7280;font-weight:600;" data-i18n="calendar_sowing_label">Sowing Date</div>
+              <div id="calSumSowing" style="font-weight:800;font-size:1.1rem;color:#2a4d3e;"></div>
+            </div>
+            <div style="font-size:2rem;">→</div>
+            <div>
+              <div style="font-size:0.85rem;color:#6b7280;font-weight:600;" data-i18n="calendar_harvest_label">Harvest Date</div>
+              <div id="calSumHarvest" style="font-weight:800;font-size:1.1rem;color:#e76f51;"></div>
+            </div>
+            <div>
+              <div style="font-size:0.85rem;color:#6b7280;font-weight:600;" data-i18n="calendar_duration_label">Duration</div>
+              <div id="calSumDays" style="font-weight:800;font-size:1.1rem;color:#2a4d3e;"></div>
+            </div>
+          </div>
+          <div id="calTimeline"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       🤝 KISAN COMMUNITY FORUM PAGE
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="community-page" class="hidden">
+    <div class="container">
+
+      <!-- New Post Form -->
+      <div class="module-card" style="margin-bottom:1.5rem;">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#ffd23f,#ffab00);color:#2a4d3e;">🤝</div>
+          <div>
+            <h3 data-i18n="community_page_title">Kisan Community Forum</h3>
+            <p data-i18n="community_page_subtitle">Ask questions, share photos, and get advice from fellow farmers & agronomists.</p>
+          </div>
+        </div>
+
+        <details id="newPostDetails" style="margin-bottom:1rem;">
+          <summary style="cursor:pointer;font-weight:700;color:var(--accent-forest);font-size:1.05rem;padding:0.75rem 0;" data-i18n="community_new_post_btn">➕ Ask a Question / Post an Update</summary>
+          <div style="margin-top:1rem;">
+            <div class="form-group">
+              <label class="form-label" data-i18n="community_post_title_label">Title / Question</label>
+              <input type="text" class="form-input" id="postTitle" placeholder="e.g. Yellow leaves on my wheat crop?" data-placeholder="community_title_placeholder">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="community_post_body_label">Details</label>
+              <textarea class="form-input" id="postBody" rows="4" placeholder="Describe the problem in detail..." data-placeholder="community_body_placeholder" style="resize:vertical;"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="community_tags_label">Tags (comma-separated)</label>
+              <input type="text" class="form-input" id="postTags" placeholder="e.g. wheat, disease, leaves" data-placeholder="community_tags_placeholder">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="community_photo_label">Photo (optional)</label>
+              <div class="upload-area" onclick="document.getElementById('communityPhotoInput').click()" style="padding:1.5rem;margin:0;">
+                <div class="upload-icon" style="font-size:2rem;">📷</div>
+                <div class="upload-text" data-i18n="community_photo_hint">Click to attach a photo of your crop issue</div>
+                <input type="file" id="communityPhotoInput" accept="image/*" style="display:none;" onchange="handleForumPhoto(event)">
+              </div>
+              <div id="communityPhotoPreview" class="hidden" style="margin-top:0.75rem;text-align:center;">
+                <img id="communityPreviewImg" alt="Forum photo" style="max-height:200px;border-radius:12px;">
+              </div>
+            </div>
+            <div id="postError"></div>
+            <button class="btn btn-accent" type="button" onclick="submitPost()" data-i18n="community_submit_btn" style="margin-top:0.5rem;">Post Question</button>
+          </div>
+        </details>
+
+        <!-- Tag filter -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem;">
+          <span style="font-weight:600;font-size:0.9rem;color:#6b7280;" data-i18n="community_filter_label">Filter by tag:</span>
+          <button class="tag-chip active" onclick="filterForum('')" data-i18n="community_tag_all">All</button>
+          <button class="tag-chip" onclick="filterForum('disease')">🐛 Disease</button>
+          <button class="tag-chip" onclick="filterForum('irrigation')">💧 Irrigation</button>
+          <button class="tag-chip" onclick="filterForum('fertilizer')">💊 Fertilizer</button>
+          <button class="tag-chip" onclick="filterForum('pest')">🦟 Pest</button>
+          <button class="tag-chip" onclick="filterForum('market')">🛒 Market</button>
+        </div>
+
+        <div id="forumSpinner" class="hidden"><div class="spinner"></div></div>
+        <div id="forumList"></div>
+        <div id="forumEmpty" class="hidden" style="text-align:center;padding:2rem;color:#9ca3af;" data-i18n="community_empty">No posts yet. Be the first to ask a question!</div>
+      </div>
+
+      <!-- Post Detail Modal Overlay -->
+      <div id="postDetailOverlay" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:500;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;">
+        <div style="background:#fff;border-radius:24px;max-width:720px;width:100%;padding:2rem;position:relative;margin-top:2rem;" id="postDetailBox">
+          <button onclick="closePostDetail()" style="position:absolute;top:1rem;right:1rem;background:#f3f4f6;border:none;border-radius:50%;width:2.5rem;height:2.5rem;font-size:1.25rem;cursor:pointer;">✕</button>
+          <div id="postDetailContent"></div>
+          <div id="postDetailReplies" style="margin-top:1.5rem;border-top:1px solid #e5e7eb;padding-top:1.5rem;"></div>
+          <div style="margin-top:1.5rem;">
+            <textarea class="form-input" id="replyBody" rows="3" placeholder="Write your answer or advice..." style="resize:vertical;"></textarea>
+            <div id="replyError"></div>
+            <button class="btn btn-primary" type="button" onclick="submitReply()" data-i18n="community_reply_btn" style="margin-top:0.75rem;">Post Reply</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     const API_BASE = "http://127.0.0.1:5000";
     const useFileRoutes = window.location.protocol === "file:";
@@ -968,7 +1279,35 @@
         crop_tomato: "Tomato",
         crop_cotton: "Cotton",
         crop_soybean: "Soybean",
-        crop_sugarcane: "Sugarcane"
+        crop_sugarcane: "Sugarcane",
+        // Crop Calendar
+        nav_calendar: "Crop Calendar",
+        calendar_page_title: "Crop Calendar & Task Timeline",
+        calendar_page_subtitle: "Generate a day-by-day timeline from sowing to harvest for your crop.",
+        calendar_crop_label: "Select Crop",
+        calendar_sowing_date_label: "Sowing Date",
+        calendar_generate_btn: "Generate Timeline",
+        calendar_sowing_label: "Sowing Date",
+        calendar_harvest_label: "Harvest Date",
+        calendar_duration_label: "Duration",
+        // Community Forum
+        nav_community: "Kisan Forum",
+        community_page_title: "Kisan Community Forum",
+        community_page_subtitle: "Ask questions, share photos, and get advice from fellow farmers & agronomists.",
+        community_new_post_btn: "➕ Ask a Question / Post an Update",
+        community_post_title_label: "Title / Question",
+        community_title_placeholder: "e.g. Yellow leaves on my wheat crop?",
+        community_post_body_label: "Details",
+        community_body_placeholder: "Describe the problem in detail...",
+        community_tags_label: "Tags (comma-separated)",
+        community_tags_placeholder: "e.g. wheat, disease, leaves",
+        community_photo_label: "Photo (optional)",
+        community_photo_hint: "Click to attach a photo of your crop issue",
+        community_submit_btn: "Post Question",
+        community_filter_label: "Filter by tag:",
+        community_tag_all: "All",
+        community_reply_btn: "Post Reply",
+        community_empty: "No posts yet. Be the first to ask a question!"
       },
       hi: {
         page_title: "AgriAI - किसान सहायता प्रणाली",
@@ -1472,6 +1811,7 @@
         );
         target?.classList.add("active");
       }
+      if (pageName === "community") loadForumPosts();
       window.scrollTo(0, 0);
     }
 
@@ -1739,10 +2079,248 @@
       applyTranslations();
     }
 
+    // ── Crop Calendar ──────────────────────────────────────────
+    async function generateCalendar() {
+      const crop = document.getElementById("calCrop").value;
+      const sowingDate = document.getElementById("calSowingDate").value;
+      const errorEl = document.getElementById("calError");
+      const spinner = document.getElementById("calSpinner");
+      const result = document.getElementById("calResult");
+
+      errorEl.innerHTML = "";
+      result.classList.add("hidden");
+      spinner.classList.remove("hidden");
+
+      try {
+        const response = await fetch(`${API_BASE}/api/crop-calendar`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ crop, sowing_date: sowingDate || null })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Failed to generate calendar");
+
+        document.getElementById("calSumSowing").textContent = formatDisplayDate(data.sowing_date);
+        document.getElementById("calSumHarvest").textContent = formatDisplayDate(data.harvest_date);
+        document.getElementById("calSumDays").textContent = `${data.total_days} days`;
+
+        const container = document.getElementById("calTimeline");
+        container.innerHTML = "";
+        data.timeline.forEach((step, idx) => {
+          const isLast = idx === data.timeline.length - 1;
+          const div = document.createElement("div");
+          div.className = "timeline-step";
+          div.innerHTML = `
+            <div class="timeline-left">
+              <div class="timeline-dot ${isLast ? "harvest-dot" : ""}">${escapeHtml(step.icon)}</div>
+              ${!isLast ? '<div class="timeline-line"></div>' : ""}
+            </div>
+            <div class="timeline-content ${isLast ? "harvest-card" : ""}">
+              <div class="tl-day">${isLast ? "🚜 HARVEST" : `Day ${step.day} · Week ${step.week}`}</div>
+              <div class="tl-date">${formatDisplayDate(step.date)}</div>
+              <div class="tl-event">${escapeHtml(step.event)}</div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+        result.classList.remove("hidden");
+      } catch (err) {
+        errorEl.innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(err.message)}</div>`;
+      } finally {
+        spinner.classList.add("hidden");
+      }
+    }
+
+    function formatDisplayDate(dateStr) {
+      if (!dateStr) return "";
+      const [y, m, d] = dateStr.split("-");
+      return new Date(Number(y), Number(m) - 1, Number(d)).toLocaleDateString(getLocale(), {
+        year: "numeric", month: "long", day: "numeric"
+      });
+    }
+
+    // ── Kisan Community Forum ──────────────────────────────────
+    let communityPhotoB64 = null;
+    let currentPostId = null;
+
+    function handleForumPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        communityPhotoB64 = e.target.result.split(",")[1];
+        const previewImg = document.getElementById("communityPreviewImg");
+        previewImg.src = e.target.result;
+        document.getElementById("communityPhotoPreview").classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function loadForumPosts(tag = "") {
+      const spinner = document.getElementById("forumSpinner");
+      const list = document.getElementById("forumList");
+      const empty = document.getElementById("forumEmpty");
+      spinner.classList.remove("hidden");
+      list.innerHTML = "";
+      empty.classList.add("hidden");
+      try {
+        const url = tag
+          ? `${API_BASE}/api/community/posts?tag=${encodeURIComponent(tag)}`
+          : `${API_BASE}/api/community/posts`;
+        const response = await fetch(url);
+        const posts = await response.json();
+        spinner.classList.add("hidden");
+        if (!posts.length) { empty.classList.remove("hidden"); return; }
+        list.innerHTML = posts.map(post => `
+          <div class="forum-post-card" onclick="openPostDetail(${post.id})">
+            <div class="forum-post-header">
+              <div class="forum-post-title">${escapeHtml(post.title)}</div>
+              <div class="forum-post-meta">${formatDisplayDate(post.created_at.split(" ")[0])}</div>
+            </div>
+            <div class="forum-post-body">${escapeHtml(post.body)}</div>
+            <div class="forum-post-footer">
+              <span style="font-size:0.82rem;color:#6b7280;">👤 ${escapeHtml(post.author)}, ${escapeHtml(post.village)}</span>
+              ${post.tags ? post.tags.split(",").map(t => `<span class="forum-tag-badge">${escapeHtml(t.trim())}</span>`).join("") : ""}
+              <span style="margin-left:auto;font-size:0.82rem;color:#9ca3af;">💬 ${post.reply_count} ${post.reply_count === 1 ? "reply" : "replies"}</span>
+            </div>
+          </div>
+        `).join("");
+      } catch {
+        spinner.classList.add("hidden");
+        list.innerHTML = `<div class="alert-box alert-error">❌ Could not load forum posts. Make sure the backend is running.</div>`;
+      }
+    }
+
+    function filterForum(tag) {
+      document.querySelectorAll(".tag-chip").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      loadForumPosts(tag);
+    }
+
+    async function openPostDetail(postId) {
+      currentPostId = postId;
+      document.getElementById("replyBody").value = "";
+      document.getElementById("replyError").innerHTML = "";
+      const overlay = document.getElementById("postDetailOverlay");
+      overlay.style.display = "flex";
+      overlay.classList.remove("hidden");
+
+      document.getElementById("postDetailContent").innerHTML = `<div class="spinner"></div>`;
+      document.getElementById("postDetailReplies").innerHTML = "";
+
+      try {
+        const res = await fetch(`${API_BASE}/api/community/posts/${postId}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to load post");
+
+        const { post, replies } = data;
+        document.getElementById("postDetailContent").innerHTML = `
+          <h2 style="font-size:1.3rem;color:var(--accent-forest);margin-bottom:0.5rem;">${escapeHtml(post.title)}</h2>
+          <div style="font-size:0.85rem;color:#9ca3af;margin-bottom:1rem;">👤 ${escapeHtml(post.author)}, ${escapeHtml(post.village)} · ${formatDisplayDate(post.created_at.split(" ")[0])}</div>
+          ${post.tags ? `<div style="margin-bottom:0.75rem;">${post.tags.split(",").map(t => `<span class="forum-tag-badge">${escapeHtml(t.trim())}</span>`).join(" ")}</div>` : ""}
+          <p style="color:var(--text-main);line-height:1.7;margin-bottom:1rem;">${escapeHtml(post.body)}</p>
+          ${post.photo_b64 ? `<img src="data:image/jpeg;base64,${post.photo_b64}" alt="Post photo" style="max-width:100%;border-radius:12px;margin-bottom:1rem;">` : ""}
+        `;
+
+        const repliesHtml = replies.length
+          ? replies.map(r => `
+            <div class="reply-bubble ${r.is_expert ? "expert-reply" : ""}">
+              <div class="reply-author">${r.is_expert ? "🌿 Agronomist · " : "👤 "}${escapeHtml(r.author)}, ${escapeHtml(r.village)}</div>
+              <div class="reply-text">${escapeHtml(r.body)}</div>
+            </div>
+          `).join("")
+          : `<p style="color:#9ca3af;font-size:0.95rem;">No replies yet. Be the first to help!</p>`;
+
+        document.getElementById("postDetailReplies").innerHTML = `
+          <h4 style="font-weight:700;color:var(--accent-forest);margin-bottom:1rem;">Replies (${replies.length})</h4>
+          ${repliesHtml}
+        `;
+      } catch (err) {
+        document.getElementById("postDetailContent").innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function closePostDetail() {
+      const overlay = document.getElementById("postDetailOverlay");
+      overlay.classList.add("hidden");
+      overlay.style.display = "";
+      currentPostId = null;
+    }
+
+    async function submitPost() {
+      const title = document.getElementById("postTitle").value.trim();
+      const body = document.getElementById("postBody").value.trim();
+      const tags = document.getElementById("postTags").value.trim();
+      const errorEl = document.getElementById("postError");
+      errorEl.innerHTML = "";
+
+      if (!title || !body) {
+        errorEl.innerHTML = `<div class="alert-box alert-error">❌ Title and details are required.</div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/community/posts`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ title, body, tags, photo_b64: communityPhotoB64 })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to post");
+
+        document.getElementById("postTitle").value = "";
+        document.getElementById("postBody").value = "";
+        document.getElementById("postTags").value = "";
+        communityPhotoB64 = null;
+        document.getElementById("communityPhotoPreview").classList.add("hidden");
+        document.getElementById("newPostDetails").removeAttribute("open");
+        loadForumPosts();
+      } catch (err) {
+        errorEl.innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    async function submitReply() {
+      if (!currentPostId) return;
+      const body = document.getElementById("replyBody").value.trim();
+      const errorEl = document.getElementById("replyError");
+      errorEl.innerHTML = "";
+
+      if (!body) {
+        errorEl.innerHTML = `<div class="alert-box alert-error">❌ Reply cannot be empty.</div>`;
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/community/posts/${currentPostId}/replies`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ body })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to post reply");
+
+        document.getElementById("replyBody").value = "";
+        await openPostDetail(currentPostId);
+        loadForumPosts();
+      } catch (err) {
+        errorEl.innerHTML = `<div class="alert-box alert-error">❌ ${escapeHtml(err.message)}</div>`;
+      }
+    }
+
     window.addEventListener("load", () => {
       applyTranslations();
       checkBackend();
       loadCropCount();
+      // Set today as default sowing date
+      document.getElementById("calSowingDate").valueAsDate = new Date();
     });
   </script>
 </body>

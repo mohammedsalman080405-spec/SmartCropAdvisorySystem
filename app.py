@@ -68,6 +68,34 @@ def init_db():
         )
         """
     )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS community_posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            photo_b64 TEXT,
+            tags TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+        """
+    )
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS community_replies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            body TEXT NOT NULL,
+            is_expert INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+        """
+    )
     connection.commit()
     connection.close()
 
@@ -636,7 +664,247 @@ def disease():
     return json_error("Disease API returned no matches for this image", 502)
 
 
+# ── Crop Calendar ─────────────────────────────────────────────
+CROP_CALENDARS = {
+    "rice": [
+        {"day": 0, "event": "Land preparation & sowing", "icon": "🌱"},
+        {"day": 7, "event": "Germination check & gap filling", "icon": "🔍"},
+        {"day": 21, "event": "1st Weeding & thinning", "icon": "🌿"},
+        {"day": 30, "event": "1st Nitrogen top dressing (Urea)", "icon": "💊"},
+        {"day": 45, "event": "Irrigation scheduling review", "icon": "💧"},
+        {"day": 55, "event": "Pest & disease scouting", "icon": "🐛"},
+        {"day": 60, "event": "2nd Nitrogen top dressing", "icon": "💊"},
+        {"day": 75, "event": "Panicle initiation – stop weeding", "icon": "🌾"},
+        {"day": 90, "event": "Flowering / pollination phase", "icon": "🌸"},
+        {"day": 105, "event": "Grain filling – reduce irrigation", "icon": "🌾"},
+        {"day": 120, "event": "Harvesting", "icon": "🚜"},
+    ],
+    "wheat": [
+        {"day": 0, "event": "Land preparation & sowing", "icon": "🌱"},
+        {"day": 10, "event": "Germination & emergence check", "icon": "🔍"},
+        {"day": 25, "event": "1st Irrigation (Crown Root Initiation)", "icon": "💧"},
+        {"day": 35, "event": "1st Nitrogen top dressing", "icon": "💊"},
+        {"day": 45, "event": "2nd Irrigation (Tillering stage)", "icon": "💧"},
+        {"day": 60, "event": "Rust & aphid scouting", "icon": "🐛"},
+        {"day": 70, "event": "3rd Irrigation (Jointing)", "icon": "💧"},
+        {"day": 80, "event": "Herbicide application if needed", "icon": "🧪"},
+        {"day": 95, "event": "Flowering phase – avoid waterlogging", "icon": "🌸"},
+        {"day": 110, "event": "Grain filling stage", "icon": "🌾"},
+        {"day": 135, "event": "Harvesting", "icon": "🚜"},
+    ],
+    "maize": [
+        {"day": 0, "event": "Land preparation & sowing", "icon": "🌱"},
+        {"day": 7, "event": "Germination check", "icon": "🔍"},
+        {"day": 20, "event": "1st Weeding & thinning", "icon": "🌿"},
+        {"day": 30, "event": "1st Nitrogen top dressing", "icon": "💊"},
+        {"day": 40, "event": "2nd Irrigation", "icon": "💧"},
+        {"day": 50, "event": "Stem borer scouting", "icon": "🐛"},
+        {"day": 60, "event": "2nd Nitrogen top dressing", "icon": "💊"},
+        {"day": 70, "event": "Tasseling / Silking phase", "icon": "🌸"},
+        {"day": 85, "event": "Grain filling", "icon": "🌽"},
+        {"day": 100, "event": "Harvesting", "icon": "🚜"},
+    ],
+    "tomato": [
+        {"day": 0, "event": "Nursery sowing", "icon": "🌱"},
+        {"day": 25, "event": "Transplanting to main field", "icon": "🏡"},
+        {"day": 35, "event": "Staking & training", "icon": "🪵"},
+        {"day": 40, "event": "1st Fertilizer application", "icon": "💊"},
+        {"day": 50, "event": "Pest & disease check (blight, whitefly)", "icon": "🐛"},
+        {"day": 60, "event": "Flowering – foliar spray", "icon": "🌸"},
+        {"day": 70, "event": "Fruit set – potassium application", "icon": "🍅"},
+        {"day": 80, "event": "1st Harvest (continues for 4–6 weeks)", "icon": "🚜"},
+    ],
+    "cotton": [
+        {"day": 0, "event": "Soil preparation & sowing", "icon": "🌱"},
+        {"day": 15, "event": "Germination check & gap filling", "icon": "🔍"},
+        {"day": 30, "event": "1st Weeding & thinning", "icon": "🌿"},
+        {"day": 45, "event": "Nitrogen top dressing", "icon": "💊"},
+        {"day": 60, "event": "Bollworm scouting & pheromone traps", "icon": "🐛"},
+        {"day": 75, "event": "Squaring stage – potassium application", "icon": "💊"},
+        {"day": 90, "event": "Flowering phase", "icon": "🌸"},
+        {"day": 110, "event": "Boll development", "icon": "☁️"},
+        {"day": 140, "event": "1st Picking (hand harvest)", "icon": "🚜"},
+        {"day": 160, "event": "2nd Picking", "icon": "🚜"},
+    ],
+    "potato": [
+        {"day": 0, "event": "Seed preparation & planting", "icon": "🌱"},
+        {"day": 15, "event": "Emergence check", "icon": "🔍"},
+        {"day": 25, "event": "Earthing up & 1st fertilizer", "icon": "⛏️"},
+        {"day": 35, "event": "2nd Irrigation", "icon": "💧"},
+        {"day": 45, "event": "Late blight spray", "icon": "🧪"},
+        {"day": 60, "event": "Tuber bulking – stop nitrogen", "icon": "🥔"},
+        {"day": 75, "event": "Haulm cutting (if needed)", "icon": "✂️"},
+        {"day": 90, "event": "Harvesting", "icon": "🚜"},
+    ],
+    "soybean": [
+        {"day": 0, "event": "Seed inoculation & sowing", "icon": "🌱"},
+        {"day": 10, "event": "Germination check", "icon": "🔍"},
+        {"day": 20, "event": "Weeding", "icon": "🌿"},
+        {"day": 35, "event": "Foliar micro-nutrient spray", "icon": "🧪"},
+        {"day": 50, "event": "Flowering – avoid stress", "icon": "🌸"},
+        {"day": 65, "event": "Pod filling stage", "icon": "🫘"},
+        {"day": 90, "event": "Harvesting", "icon": "🚜"},
+    ],
+    "sugarcane": [
+        {"day": 0, "event": "Planting setts", "icon": "🌱"},
+        {"day": 20, "event": "Germination check & gap filling", "icon": "🔍"},
+        {"day": 45, "event": "1st Weeding & earthing up", "icon": "🌿"},
+        {"day": 60, "event": "Nitrogen top dressing", "icon": "💊"},
+        {"day": 90, "event": "De-trashing & irrigation", "icon": "💧"},
+        {"day": 120, "event": "Grand growth phase – fertilizer", "icon": "💊"},
+        {"day": 180, "event": "Maturity assessment – stop irrigation", "icon": "🔍"},
+        {"day": 330, "event": "Harvesting", "icon": "🚜"},
+    ],
+}
+
+
+@app.route("/api/crop-calendar", methods=["POST"])
+def crop_calendar():
+    data = get_json_body()
+    if not data:
+        return json_error("JSON body required")
+    crop = (data.get("crop") or "").strip().lower()
+    if crop not in CROP_CALENDARS:
+        return json_error(f"Crop '{crop}' not supported. Supported: {', '.join(CROP_CALENDARS)}")
+    sowing_date_str = (data.get("sowing_date") or "").strip()
+    from datetime import datetime, timedelta
+    try:
+        sowing_date = datetime.strptime(sowing_date_str, "%Y-%m-%d") if sowing_date_str else datetime.today()
+    except ValueError:
+        return json_error("Invalid sowing_date format. Use YYYY-MM-DD.")
+    timeline = []
+    for entry in CROP_CALENDARS[crop]:
+        target = sowing_date + timedelta(days=entry["day"])
+        timeline.append({
+            "day": entry["day"],
+            "date": target.strftime("%Y-%m-%d"),
+            "week": entry["day"] // 7 + 1,
+            "event": entry["event"],
+            "icon": entry["icon"],
+        })
+    return jsonify({
+        "crop": crop,
+        "sowing_date": sowing_date.strftime("%Y-%m-%d"),
+        "harvest_date": timeline[-1]["date"],
+        "total_days": timeline[-1]["day"],
+        "timeline": timeline,
+    })
+
+
+# ── Kisan Community Forum ──────────────────────────────────────
+@app.route("/api/community/posts", methods=["GET"])
+def get_community_posts():
+    tag_filter = request.args.get("tag", "").strip()
+    conn = get_db_connection()
+    if tag_filter:
+        rows = conn.execute(
+            """
+            SELECT p.id, p.title, p.body, p.photo_b64, p.tags, p.created_at,
+                   u.name AS author, u.village,
+                   (SELECT COUNT(*) FROM community_replies r WHERE r.post_id = p.id) AS reply_count
+            FROM community_posts p JOIN users u ON u.id = p.user_id
+            WHERE p.tags LIKE ?
+            ORDER BY p.created_at DESC LIMIT 50
+            """,
+            (f"%{tag_filter}%",),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            """
+            SELECT p.id, p.title, p.body, p.photo_b64, p.tags, p.created_at,
+                   u.name AS author, u.village,
+                   (SELECT COUNT(*) FROM community_replies r WHERE r.post_id = p.id) AS reply_count
+            FROM community_posts p JOIN users u ON u.id = p.user_id
+            ORDER BY p.created_at DESC LIMIT 50
+            """,
+        ).fetchall()
+    conn.close()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route("/api/community/posts", methods=["POST"])
+def create_community_post():
+    token = get_bearer_token()
+    user = get_user_by_token(token)
+    if not user:
+        return json_error("Unauthorized", 401)
+    data = get_json_body()
+    if not data:
+        return json_error("JSON body required")
+    title = (data.get("title") or "").strip()
+    body = (data.get("body") or "").strip()
+    if not title or not body:
+        return json_error("title and body are required")
+    photo_b64 = data.get("photo_b64")
+    tags = (data.get("tags") or "").strip()
+    conn = get_db_connection()
+    cursor = conn.execute(
+        "INSERT INTO community_posts (user_id, title, body, photo_b64, tags) VALUES (?, ?, ?, ?, ?)",
+        (user["id"], title, body, photo_b64, tags),
+    )
+    post_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return jsonify({"id": post_id, "message": "Post created"}), 201
+
+
+@app.route("/api/community/posts/<int:post_id>", methods=["GET"])
+def get_community_post(post_id):
+    conn = get_db_connection()
+    post = conn.execute(
+        """
+        SELECT p.id, p.title, p.body, p.photo_b64, p.tags, p.created_at,
+               u.name AS author, u.village
+        FROM community_posts p JOIN users u ON u.id = p.user_id
+        WHERE p.id = ?
+        """,
+        (post_id,),
+    ).fetchone()
+    if not post:
+        conn.close()
+        return json_error("Post not found", 404)
+    replies = conn.execute(
+        """
+        SELECT r.id, r.body, r.is_expert, r.created_at, u.name AS author, u.village
+        FROM community_replies r JOIN users u ON u.id = r.user_id
+        WHERE r.post_id = ?
+        ORDER BY r.created_at ASC
+        """,
+        (post_id,),
+    ).fetchall()
+    conn.close()
+    return jsonify({"post": dict(post), "replies": [dict(r) for r in replies]})
+
+
+@app.route("/api/community/posts/<int:post_id>/replies", methods=["POST"])
+def create_community_reply(post_id):
+    token = get_bearer_token()
+    user = get_user_by_token(token)
+    if not user:
+        return json_error("Unauthorized", 401)
+    data = get_json_body()
+    if not data:
+        return json_error("JSON body required")
+    body = (data.get("body") or "").strip()
+    if not body:
+        return json_error("body is required")
+    conn = get_db_connection()
+    post = conn.execute("SELECT id FROM community_posts WHERE id = ?", (post_id,)).fetchone()
+    if not post:
+        conn.close()
+        return json_error("Post not found", 404)
+    cursor = conn.execute(
+        "INSERT INTO community_replies (post_id, user_id, body) VALUES (?, ?, ?)",
+        (post_id, user["id"], body),
+    )
+    reply_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return jsonify({"id": reply_id, "message": "Reply added"}), 201
+
+
 init_db()
 
 if __name__ == "__main__":
     app.run(debug=True)
+
